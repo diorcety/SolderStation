@@ -1,0 +1,199 @@
+Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 13/01/2015 22:42:00
+
+BeginCmp
+TimeStamp = /54B0F663;
+Reference = C1;
+ValeurCmp = 10nF;
+IdModule  = SMD_Packages:SMD-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0FE42;
+Reference = C3;
+ValeurCmp = 10nF;
+IdModule  = SMD_Packages:SMD-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B59B66;
+Reference = D1;
+ValeurCmp = LED;
+IdModule  = LEDs:LED-0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0F833;
+Reference = IC1;
+ValeurCmp = OPA336U;
+IdModule  = SMD_Packages:SOIC-8-W;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0F266;
+Reference = P1;
+ValeurCmp = JACK_2P;
+IdModule  = Connect:BARREL_JACK;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B12906;
+Reference = P2;
+ValeurCmp = POWER;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B12D31;
+Reference = P3;
+ValeurCmp = MCU;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x04;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B58CE8;
+Reference = P4;
+ValeurCmp = KEYPAD;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x07;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0F991;
+Reference = R1;
+ValeurCmp = 100;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0FB31;
+Reference = R2;
+ValeurCmp = 68K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0F425;
+Reference = R3;
+ValeurCmp = 5K6;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B1119D;
+Reference = R4;
+ValeurCmp = 10K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B1056B;
+Reference = R5;
+ValeurCmp = 1K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B5A476;
+Reference = R6;
+ValeurCmp = 220R;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B59E50;
+Reference = R7;
+ValeurCmp = 1K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B592D0;
+Reference = R8;
+ValeurCmp = 100K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B5928D;
+Reference = R9;
+ValeurCmp = 100K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B5924C;
+Reference = R10;
+ValeurCmp = 100K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B59175;
+Reference = R11;
+ValeurCmp = 100K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0FCF5;
+Reference = R18;
+ValeurCmp = 5K6;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B0F548;
+Reference = R19;
+ValeurCmp = 100K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B589BD;
+Reference = SW1;
+ValeurCmp = SPST;
+IdModule  = footprint:SW_65_45;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B58A5E;
+Reference = SW2;
+ValeurCmp = SPST;
+IdModule  = footprint:SW_65_45;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B58AB3;
+Reference = SW3;
+ValeurCmp = SPST;
+IdModule  = footprint:SW_65_45;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B58AE8;
+Reference = SW4;
+ValeurCmp = SPST;
+IdModule  = footprint:SW_65_45;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B10A82;
+Reference = T1;
+ValeurCmp = IRF7416;
+IdModule  = SMD_Packages:SOIC-8-W;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B1101F;
+Reference = T2;
+ValeurCmp = BSN20;
+IdModule  = SMD_Packages:SOT-23;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B5A089;
+Reference = T3;
+ValeurCmp = BSN20;
+IdModule  = SMD_Packages:SOT-23;
+EndCmp
+
+EndListe
