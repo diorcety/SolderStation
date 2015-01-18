@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 13/01/2015 22:42:00
+Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 18/01/2015 14:24:50
 
 BeginCmp
 TimeStamp = /54B0F663;
@@ -194,6 +194,13 @@ TimeStamp = /54B5A089;
 Reference = T3;
 ValeurCmp = BSN20;
 IdModule  = SMD_Packages:SOT-23;
+EndCmp
+
+BeginCmp
+TimeStamp = /54BBC0FA;
+Reference = U1;
+ValeurCmp = arduino_mini;
+IdModule  = arduino:arduino_mini;
 EndCmp
 
 EndListe
