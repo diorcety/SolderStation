@@ -7,6 +7,7 @@
 #define CS 10
 #define DC 9
 #define RESET 8
+#define BL  2
 #define DEGREE_SYM "\xF8"
 
 Adafruit_PCD8544 display = Adafruit_PCD8544(DC, CS, RESET);
@@ -35,6 +36,24 @@ void lcd_init() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(BLACK);
+  
+  // Switch of the Backlight
+  digitalWrite(BL, LOW); 
+  pinMode(BL, OUTPUT);
+}
+
+/*
+ * Enable/Disable backlight
+ */
+void lcd_set_backlight(boolean enable) {
+  digitalWrite(BL, enable); 
+}
+
+/*
+ * Get backlight status
+ */
+boolean lcd_get_backlight() {
+  return digitalRead(BL);
 }
 
 /*
@@ -75,5 +94,16 @@ void lcd_print_target_temperature(int temperature) {
   display.setTextColor(BLACK, WHITE);
   __lcd_print_temperature(temperature);
   display.display();
+}
+
+/*
+ * Print title
+ */
+void lcd_print_title(String title) {
+    display.setTextSize(1);
+    display.setCursor(54, 0);
+    display.setTextColor(BLACK, WHITE);
+    display.print(title);
+    display.display();
 }
 

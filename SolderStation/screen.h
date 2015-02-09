@@ -9,6 +9,8 @@
 
 // Define screens
 #define SCREEN_MAIN 0
+#define SCREEN_MENU 1
+#define SCREEN_SCREEN_SETTINGS 2
 
 extern byte current_screen;
 extern byte old_screen;

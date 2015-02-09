@@ -15,6 +15,16 @@ void lcd_init();
 void lcd_clear();
 
 /*
+ * Enable/Disable backlight
+ */
+void lcd_set_backlight(boolean enable);
+
+/*
+ * Get backlight status
+ */
+boolean lcd_get_backlight();
+
+/*
  * Print heat signal
  */
 void lcd_print_heat(boolean show);
@@ -28,6 +38,11 @@ void lcd_print_iron_temperature(int temperature);
  * Print target temperature
  */
 void lcd_print_target_temperature(int temperature);
+
+/*
+ * Print title
+ */
+void lcd_print_title(String title);
 
 #endif //_LCD_H
 

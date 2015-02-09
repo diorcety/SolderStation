@@ -25,7 +25,10 @@ typedef uint8_t byte;
 class Button {
 public:
 	Button();
+	Button(bool inverted);
 	Button(byte type);
+	Button(byte type, bool inverted);
+
 	void assign(byte pin);
 	byte check();
 	byte check(byte mode_v);
@@ -33,15 +36,18 @@ public:
 
 	// Setters
 	void setMode(byte type_v);
+	void setInverted(bool inverted_v);
 	void setTimer(unsigned int t);
 	void setRefresh(unsigned int r);
 	void turnOnPullUp();
 	void turnOffPullUp();
 	
 	
-private:	
+private:
+	void init(byte mode_v, bool inverted);
 	byte pin;
 	byte mode;
+	bool inverted;
 	unsigned long hold_timer;
 	unsigned long refresh_timer;
 	unsigned int hold_level;

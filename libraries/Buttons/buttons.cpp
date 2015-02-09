@@ -17,21 +17,28 @@
 
 
 Button::Button() { 
-	previous = false;
-	mode = OneShot;
-	hold_timer = millis();
-	refresh_timer = millis();
-	hold_level = 1000; // 1 second
-	hold_refresh = 100; // 100 ms
-	pin = 0;
+	init(OneShot, false);
 }
+
+Button::Button(bool inverted) { 
+	init(OneShot, inverted);
+}
+
 Button::Button(byte mode_v) {
+	init(mode_v, false);
+}
+
+Button::Button(byte mode_v, bool inverted) {
+	init(mode_v, inverted);
+}
+
+void Button::init(byte mode_v, bool inverted) {
 	previous = false;
 	mode = mode_v;
 	hold_timer = millis();
 	refresh_timer = millis();
-	hold_level = 1000;
-	hold_refresh = 100;
+	hold_level = 1000; // 1 second
+	hold_refresh = 100; // 100 ms
 	pin = 0;
 }
 	
@@ -40,11 +47,12 @@ void Button::assign(byte pin_v) {
 	pin = pin_v; 
 	pinMode(pin, INPUT);
 }
-void Button::turnOnPullUp() { if (pin) digitalWrite(pin, HIGH); }
-void Button::turnOffPullUp() { if (pin) digitalWrite(pin, LOW); }	
+void Button::turnOnPullUp() { if (pin) pinMode(pin, INPUT_PULLUP); }
+void Button::turnOffPullUp() { if (pin) pinMode(pin, INPUT); }
 
 // Setters
 void Button::setMode(byte mode_v) { mode = mode_v; }
+void Button::setInverted(bool inverted_v) { inverted = inverted_v; }
 void Button::setTimer(unsigned int t) { if (mode > Memory) hold_level = (unsigned long)t; }
 void Button::setRefresh(unsigned int r) { hold_refresh = r; }
 
@@ -68,7 +76,8 @@ unsigned int Button::getHoldTime() {
 
 byte Button::check() {
 	unsigned long time_ms = millis();
-	if (digitalRead(pin)) {
+	int val = (inverted & 0x1) ^ digitalRead(pin);
+	if (val) {
 		switch (mode) {
 			case OneShot:
 				if (previous) {

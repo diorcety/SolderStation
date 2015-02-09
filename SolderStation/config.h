@@ -5,7 +5,10 @@
 #define DEBUG
 
 // Main delay
-#define DELAY_MAIN_LOOP_IN_MS 10
+#define DELAY_MAIN_LOOP 10
+#define DELAY_UI_LOOP 10
+#define DELAY_SETTINGS_LOOP 1000
+#define DELAY_SAVE_SETTINGS 10000
 
 // Gain
 #define CNTRL_GAIN 10
@@ -28,9 +31,20 @@
  */
 // Buttons pins
 #define BUTTON_UP_PIN 7
+#define BUTTON_UP_PULL 1
+#define BUTTON_UP_INVERTED 1
+
 #define BUTTON_DOWN_PIN 6
+#define BUTTON_DOWN_PULL 1
+#define BUTTON_DOWN_INVERTED 1
+
 #define BUTTON_SELECT_PIN 5
+#define BUTTON_SELECT_PULL 1
+#define BUTTON_SELECT_INVERTED 1
+
 #define BUTTON_BACK_PIN 4
+#define BUTTON_BACK_PULL 1
+#define BUTTON_BACK_INVERTED 1
 
 #endif //_CONFIG_H
 

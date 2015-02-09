@@ -17,13 +17,12 @@
 #include "controls.h"
 #include "memory.h"
 
-#define DELAY_MAIN_LOOP DELAY_MAIN_LOOP_IN_MS
-
 /*
  * Load settings from the memory
  */
 void load_settings() {
   set_target_temperature(memory_load_target_temperature());
+  set_lcd_backlight_mode((lcd_mode)memory_load_lcd_backlight_mode());
 }
 
 /*
@@ -31,6 +30,7 @@ void load_settings() {
  */
 void save_settings() {
   memory_save_target_temperature(get_target_temperature());
+  memory_save_lcd_backlight_mode((byte)get_lcd_backlight_mode());
 }
 
 /*
@@ -64,6 +64,8 @@ void update_iron_temperature() {
 
 SimpleTimer uiTimer; // UI timer
 SimpleTimer ironTimer; // Iron timer
+SimpleTimer settingsTimer; // Settings timer
+SimpleTimer saveTimer; // Save timer
 
 void update_ui() {
    // Inputs
@@ -84,6 +86,11 @@ void update_iron() {
   }
 }
 
+void update_settings() {
+  lcd_mode lm = get_lcd_backlight_mode();
+  lcd_set_backlight(lm > LCD_OFF);
+}
+
 /*
  * Setup function
  */
@@ -94,8 +101,10 @@ void setup() {
 #endif //DEBUG
 
   // Init timers
-  uiTimer.setInterval(DELAY_MAIN_LOOP, update_ui);
+  uiTimer.setInterval(DELAY_UI_LOOP, update_ui);
   ironTimer.setInterval(DELAY_MAIN_LOOP, update_iron);
+  settingsTimer.setInterval(DELAY_SETTINGS_LOOP, update_settings);
+  saveTimer.setInterval(DELAY_SAVE_SETTINGS, save_settings);
 
   // Init modules
   iron_init();
@@ -116,5 +125,7 @@ void setup() {
  */
 void loop() {
   uiTimer.run(); 
-  ironTimer.run();  
+  ironTimer.run();
+  settingsTimer.run();
+  saveTimer.run();
 }

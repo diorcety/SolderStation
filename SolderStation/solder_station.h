@@ -8,12 +8,22 @@ int get_target_temperature();
 
 void set_target_temperature(int tTmp);
 
-void set_iron_temperature(int tTmp);
-
 int get_iron_temperature();
+
+void set_iron_temperature(int tTmp);
 
 int get_iron_pwm();
 
 void set_iron_pwm(int pwm);
+
+typedef enum _lcd_mode {
+  LCD_OFF,
+  LCD_ON,
+  LCD_TIMER
+} lcd_mode;
+
+lcd_mode get_lcd_backlight_mode();
+
+void set_lcd_backlight_mode(lcd_mode status);
 
 #endif //_SOLDER_STATION_H
