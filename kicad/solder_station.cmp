@@ -1,10 +1,17 @@
-Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 18/01/2015 14:24:50
+Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 01/02/2015 11:18:53
 
 BeginCmp
 TimeStamp = /54B0F663;
 Reference = C1;
 ValeurCmp = 10nF;
 IdModule  = SMD_Packages:SMD-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54CAD24A;
+Reference = C2;
+ValeurCmp = CAPAPOL;
+IdModule  = Capacitors_ThroughHole:Capacitor30x51RM10;
 EndCmp
 
 BeginCmp
@@ -22,6 +29,13 @@ IdModule  = LEDs:LED-0805;
 EndCmp
 
 BeginCmp
+TimeStamp = /54CABD9B;
+Reference = D2;
+ValeurCmp = BRIDGE;
+IdModule  = footprint:DiodeBridge;
+EndCmp
+
+BeginCmp
 TimeStamp = /54B0F833;
 Reference = IC1;
 ValeurCmp = OPA336U;
@@ -32,7 +46,7 @@ BeginCmp
 TimeStamp = /54B0F266;
 Reference = P1;
 ValeurCmp = JACK_2P;
-IdModule  = Connect:BARREL_JACK;
+IdModule  = footprint:AC3MMxZV;
 EndCmp
 
 BeginCmp
@@ -57,9 +71,44 @@ IdModule  = Pin_Headers:Pin_Header_Straight_1x07;
 EndCmp
 
 BeginCmp
+TimeStamp = /54C97D24;
+Reference = P5;
+ValeurCmp = JACK;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x03;
+EndCmp
+
+BeginCmp
+TimeStamp = /54C97BD7;
+Reference = P6;
+ValeurCmp = JACK;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x03;
+EndCmp
+
+BeginCmp
+TimeStamp = /54CABC82;
+Reference = P7;
+ValeurCmp = TRANSFO;
+IdModule  = Connect:bornier2;
+EndCmp
+
+BeginCmp
+TimeStamp = /54CAD746;
+Reference = P8;
+ValeurCmp = POWER;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
+EndCmp
+
+BeginCmp
+TimeStamp = /54CAD7EC;
+Reference = P9;
+ValeurCmp = POWER;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
+EndCmp
+
+BeginCmp
 TimeStamp = /54B0F991;
 Reference = R1;
-ValeurCmp = 100;
+ValeurCmp = 100R;
 IdModule  = Resistors_SMD:R_0603;
 EndCmp
 
