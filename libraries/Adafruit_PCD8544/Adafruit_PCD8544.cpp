@@ -270,8 +270,8 @@ void Adafruit_PCD8544::setContrast(uint8_t val) {
   if (val > 0x7f) {
     val = 0x7f;
   }
-  command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION );
-  command( PCD8544_SETVOP | val); 
+  command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+  command(PCD8544_SETVOP | val); 
   command(PCD8544_FUNCTIONSET);
   
  }

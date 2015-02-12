@@ -20,9 +20,9 @@ void lcd_clear();
 void lcd_set_backlight(boolean enable);
 
 /*
- * Get backlight status
+ * Set contrast
  */
-boolean lcd_get_backlight();
+void lcd_set_contrast(byte contrast);
 
 /*
  * Print heat signal
@@ -42,7 +42,22 @@ void lcd_print_target_temperature(int temperature);
 /*
  * Print title
  */
-void lcd_print_title(String title);
+void lcd_print_title(const char *title);
+
+typedef enum {
+  ITEM_NONE,
+  ITEM_SELECTED,
+  ITEM_EDITION,
+} item_state;
+/*
+ * Print item
+ */
+void lcd_print_item(byte line, const char *item, const char *value, item_state state);
+
+/*
+ * Display on the lcd
+ */
+void lcd_display();
 
 #endif //_LCD_H
 

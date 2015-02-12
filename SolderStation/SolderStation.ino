@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+#include "config.h"
 
 // Hack for Arduino IDE
 #include <EEPROM.h>
@@ -9,29 +9,11 @@
 
 #include <SimpleTimer.h>
 #include "solder_station.h"
-#include "config.h"
 #include "iron.h"
-#include "screen.h"
 #include "lcd.h"
 #include "display.h"
 #include "controls.h"
 #include "memory.h"
-
-/*
- * Load settings from the memory
- */
-void load_settings() {
-  set_target_temperature(memory_load_target_temperature());
-  set_lcd_backlight_mode((lcd_mode)memory_load_lcd_backlight_mode());
-}
-
-/*
- * Save settings to the memory
- */
-void save_settings() {
-  memory_save_target_temperature(get_target_temperature());
-  memory_save_lcd_backlight_mode((byte)get_lcd_backlight_mode());
-}
 
 /*
  * Main functions
@@ -49,14 +31,14 @@ int compute_iron_pwm(int actual_temperature, int target_temperature) {
 void update_iron_temperature() {
    int iron_temperature = get_iron_temperature();
 #ifdef DEBUG
-   Serial.print("Iron Temp.=");
+   Serial.print(MY_STR("Iron Temp.="));
    Serial.println(iron_temperature);
 #endif //DEBUG
    int iron_pwm = compute_iron_pwm(iron_temperature, get_target_temperature());
    set_iron_pwm(iron_pwm);
    iron_pwm = get_iron_pwm();
 #ifdef DEBUG
-   Serial.print("Iron PWM=");
+   Serial.print(MY_STR("Iron PWM="));
    Serial.println(iron_pwm);
 #endif //DEBUG
    iron_set_pwm(iron_pwm);
@@ -66,14 +48,6 @@ SimpleTimer uiTimer; // UI timer
 SimpleTimer ironTimer; // Iron timer
 SimpleTimer settingsTimer; // Settings timer
 SimpleTimer saveTimer; // Save timer
-
-void update_ui() {
-   // Inputs
-   constrols_update();
-   
-   // Outputs
-   display_update();
-}
 
 void update_iron() {
   static byte cycle = 0;
@@ -86,25 +60,14 @@ void update_iron() {
   }
 }
 
-void update_settings() {
-  lcd_mode lm = get_lcd_backlight_mode();
-  lcd_set_backlight(lm > LCD_OFF);
-}
-
 /*
  * Setup function
  */
 void setup() {
 #ifdef DEBUG
   Serial.begin(115200);
-  Serial.println("Booting...");
+  Serial.println(MY_STR("Booting..."));
 #endif //DEBUG
-
-  // Init timers
-  uiTimer.setInterval(DELAY_UI_LOOP, update_ui);
-  ironTimer.setInterval(DELAY_MAIN_LOOP, update_iron);
-  settingsTimer.setInterval(DELAY_SETTINGS_LOOP, update_settings);
-  saveTimer.setInterval(DELAY_SAVE_SETTINGS, save_settings);
 
   // Init modules
   iron_init();
@@ -114,10 +77,20 @@ void setup() {
    
   // Load settings
   load_settings();
+  
+  // Init timers
+  uiTimer.setInterval(DELAY_UI_LOOP, display_update);
+  ironTimer.setInterval(DELAY_MAIN_LOOP, update_iron);
+  settingsTimer.setInterval(DELAY_SETTINGS_LOOP, update_settings);
+  saveTimer.setInterval(DELAY_SAVE_SETTINGS_LOOP, save_settings);
     
 #ifdef DEBUG
-  Serial.println("Solder station V0.1");
+  Serial.println(MY_STR("Solder station V0.1"));
 #endif //DEBUG
+
+  // Update data
+  update_iron();
+  update_settings();
 }
 
 /*

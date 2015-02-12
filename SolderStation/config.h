@@ -8,7 +8,7 @@
 #define DELAY_MAIN_LOOP 10
 #define DELAY_UI_LOOP 10
 #define DELAY_SETTINGS_LOOP 1000
-#define DELAY_SAVE_SETTINGS 10000
+#define DELAY_SAVE_SETTINGS_LOOP 10000
 
 // Gain
 #define CNTRL_GAIN 10
@@ -45,6 +45,12 @@
 #define BUTTON_BACK_PIN 4
 #define BUTTON_BACK_PULL 1
 #define BUTTON_BACK_INVERTED 1
+
+#ifdef DEBUG
+#include <HardwareSerial.h>
+#endif
+
+#define MY_STR(x) x
 
 #endif //_CONFIG_H
 

@@ -1,5 +1,7 @@
+#include "config.h"
 #include "utils.h"
 #include <Arduino.h>
+#include <stdarg.h>
 
 /*
  * Set the frequency of the PWM output (code from http://playground.arduino.cc/Code/PwmFrequency):
@@ -33,5 +35,14 @@ void setPwmFrequency(int pin, int divisor) {
     }
     TCCR2B = TCCR2B & 0b11111000 | mode;
   }
+}
+
+const char * my_sprintf(const char *format, ...) {
+  static char buffer[128];
+  va_list args;
+  va_start (args, format);
+  vsnprintf(buffer, sizeof(buffer) -1, format, args);
+  va_end (args);
+  return buffer;
 }
 

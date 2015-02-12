@@ -1,6 +1,8 @@
 #ifndef _CONTROLS_H
 #define _CONTROLS_H
 
+#include <buttons.h>
+
 #define BUTTON_UP 0
 #define BUTTON_DOWN 1
 #define BUTTON_SELECT 2
@@ -8,6 +10,7 @@
 #define BUTTON_MAX 4
 
 void controls_init();
-void constrols_update();
+
+extern Button buttons[BUTTON_MAX];
 
 #endif //_CONTROLS_H

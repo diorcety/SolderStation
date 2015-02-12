@@ -4,6 +4,8 @@
  *  Created by Franky on 29/01/09.
  *  Licensed under LGPL (free to modify and use as you wish)
  */
+#ifndef _BUTTONS_H
+#define _BUTTONS_H
 
 #include <inttypes.h>
 
@@ -69,3 +71,5 @@ private:
  (Pressed/ON/Hold/Released/OFF)
  
  */
+
+ #endif //_BUTTONS_H

@@ -1,9 +1,7 @@
-#include "iron.h"
 #include "config.h"
+#include "iron.h"
 #include "utils.h"
 #include <Arduino.h>
-
-static int pwm;
 
 //R2=68K:
 #define ADC_TO_TEMP_GAIN 0.39

@@ -6,4 +6,6 @@
  */
 void setPwmFrequency(int pin, int divisor);
 
+const char * my_sprintf(const char *format, ...);
+
 #endif //_UTILS_H

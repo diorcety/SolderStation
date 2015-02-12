@@ -1,8 +1,6 @@
-#include "controls.h"
 #include "config.h"
-#include "screen.h"
+#include "controls.h"
 #include "solder_station.h"
-#include <buttons.h>
 
 #undef PIN
 #undef PULL
@@ -46,58 +44,5 @@ void controls_init() {
       buttons[i].turnOffPullUp();
     }
     buttons[i].setInverted(GET_STATE(buttons_state[i], INVERTED));
-  }
-}
-
-
-/*
- * Main screen
- */
-static void controls_main_screen() {
-  switch(buttons[BUTTON_SELECT].check()) {
-    case ON:
-      screen_change(SCREEN_MENU);
-    break;
-  }
-  
-  switch(buttons[BUTTON_UP].check()) {
-    case ON:
-    case HOLD:
-      Serial.println("Increase target temp.");
-      set_target_temperature(get_target_temperature() + 5);
-    break;
-  }
-  switch(buttons[BUTTON_DOWN].check()) {
-    case ON:
-    case HOLD:
-      Serial.println("Decrease target temp.");
-      set_target_temperature(get_target_temperature() - 5);
-    break;
-  }
-}
-
-/*
- * Menu screen
- */
-static void controls_menu_screen() {
-  switch(buttons[BUTTON_BACK].check()) {
-    case ON:
-      screen_change(SCREEN_MAIN);
-    break;
-  }
-}
-
-/*
- * Update controls
- */
-void constrols_update() {
-  switch(current_screen) {
-    default:
-    case SCREEN_MAIN:
-      controls_main_screen();
-      break;
-    case SCREEN_MENU:
-      controls_menu_screen();
-      break;
   }
 }
