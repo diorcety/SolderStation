@@ -13,4 +13,6 @@ void controls_init();
 
 extern Button buttons[BUTTON_MAX];
 
+#define BUTTON_ACTION(b) (b&0x3)
+
 #endif //_CONTROLS_H

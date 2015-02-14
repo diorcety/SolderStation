@@ -4,6 +4,8 @@
 // For boolean type
 #include <Arduino.h>
 
+#define DEGREE_SYM "\xF8"
+
 /*
  * Init LCD stuff
  */
@@ -38,6 +40,11 @@ void lcd_print_iron_temperature(int temperature);
  * Print target temperature
  */
 void lcd_print_target_temperature(int temperature);
+
+/*
+ * Print standby temperature
+ */
+void lcd_print_standby_temperature(int temperature);
 
 /*
  * Print title

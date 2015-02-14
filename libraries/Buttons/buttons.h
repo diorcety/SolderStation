@@ -15,11 +15,11 @@
 #define OneShotTimer 3
 #define MemoryTimer 4
 
-#define ON 1
 #define OFF 0
+#define ON 1
 #define PRESSED 2
-#define RELEASED 3
-#define HOLD 4
+#define HOLD 3
+#define RELEASED 4
 
 typedef uint8_t byte;
 
@@ -34,6 +34,7 @@ public:
 	void assign(byte pin);
 	byte check();
 	byte check(byte mode_v);
+	void acknowledge();
 	unsigned int getHoldTime();
 
 	// Setters
@@ -55,6 +56,7 @@ private:
 	unsigned int hold_level;
 	unsigned int hold_refresh;
 	bool previous;
+	bool ack;
 };
 
 

@@ -8,6 +8,14 @@ int get_target_temperature();
 
 void set_target_temperature(int tTmp);
 
+int get_standby_temperature();
+
+void set_standby_temperature(int tTmp);
+
+boolean get_standby_mode();
+
+void set_standby_mode(boolean standby);
+
 int get_iron_temperature();
 
 void set_iron_temperature(int tTmp);
@@ -29,6 +37,20 @@ void set_lcd_backlight_mode(lcd_mode status);
 byte get_lcd_contrast();
 
 void set_lcd_contrast(byte contrast);
+
+byte get_language();
+
+void set_language(byte lang);
+
+typedef enum _temperature_unit {
+  TEMP_CELSIUS,
+  TEMP_FAHRENHEIT,
+  TEMP_MAX
+} temperature_unit;
+
+temperature_unit get_temperature_unit();
+
+void set_temperature_unit(temperature_unit ts);
 
 /*
  * Load settings from the memory

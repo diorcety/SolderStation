@@ -40,6 +40,7 @@ void Button::init(byte mode_v, bool inverted) {
 	hold_level = 1000; // 1 second
 	hold_refresh = 100; // 100 ms
 	pin = 0;
+	ack = false;
 }
 	
 
@@ -74,10 +75,19 @@ unsigned int Button::getHoldTime() {
 	return millis() - hold_timer;
 }
 
+void Button::acknowledge() {
+	if(previous) {
+		ack = true;
+	}
+}
+
 byte Button::check() {
 	unsigned long time_ms = millis();
 	int val = (inverted & 0x1) ^ digitalRead(pin);
 	if (val) {
+		if(ack) {
+			return OFF;
+		}
 		switch (mode) {
 			case OneShot:
 				if (previous) {
@@ -170,6 +180,7 @@ byte Button::check() {
 			return RELEASED;
 		}
 		previous = false;
+		ack = false;
 		hold_timer = time_ms;
 		refresh_timer = time_ms;
 		return OFF;

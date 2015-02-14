@@ -50,7 +50,5 @@
 #include <HardwareSerial.h>
 #endif
 
-#define MY_STR(x) x
-
 #endif //_CONFIG_H
 

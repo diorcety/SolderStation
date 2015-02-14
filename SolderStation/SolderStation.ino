@@ -14,6 +14,7 @@
 #include "display.h"
 #include "controls.h"
 #include "memory.h"
+#include "lang.h"
 
 /*
  * Main functions
@@ -31,14 +32,15 @@ int compute_iron_pwm(int actual_temperature, int target_temperature) {
 void update_iron_temperature() {
    int iron_temperature = get_iron_temperature();
 #ifdef DEBUG
-   Serial.print(MY_STR("Iron Temp.="));
+   Serial.print("Iron Temp.=");
    Serial.println(iron_temperature);
 #endif //DEBUG
-   int iron_pwm = compute_iron_pwm(iron_temperature, get_target_temperature());
+   int temperature = get_standby_mode()? get_standby_temperature():get_target_temperature();
+   int iron_pwm = compute_iron_pwm(iron_temperature, temperature);
    set_iron_pwm(iron_pwm);
    iron_pwm = get_iron_pwm();
 #ifdef DEBUG
-   Serial.print(MY_STR("Iron PWM="));
+   Serial.print("Iron PWM=");
    Serial.println(iron_pwm);
 #endif //DEBUG
    iron_set_pwm(iron_pwm);
@@ -66,7 +68,7 @@ void update_iron() {
 void setup() {
 #ifdef DEBUG
   Serial.begin(115200);
-  Serial.println(MY_STR("Booting..."));
+  Serial.println("Booting...");
 #endif //DEBUG
 
   // Init modules
@@ -85,7 +87,7 @@ void setup() {
   saveTimer.setInterval(DELAY_SAVE_SETTINGS_LOOP, save_settings);
     
 #ifdef DEBUG
-  Serial.println(MY_STR("Solder station V0.1"));
+  Serial.println("Solder station V0.1");
 #endif //DEBUG
 
   // Update data

@@ -4,6 +4,7 @@
 #include "controls.h"
 #include "lcd.h"
 #include "utils.h"
+#include "lang.h"
 
 typedef union _display_state_struct {
   struct main_state {
@@ -15,8 +16,8 @@ typedef union _display_state_struct {
 } display_state_struct;
 
 typedef struct _item_entry {
-  const char *text;
-  const char *(*get_fct)(void);
+  TranslatableText text;
+  const char* (*get_fct)(void);
   boolean (*set_fct)(boolean);
 } item_entry;
 
@@ -46,11 +47,29 @@ static View *current_screen = NULL;
 typedef enum {
   SCREEN_MAIN = 0,
   SCREEN_MENU_MAIN,
+  SCREEN_MENU_IRON,
   SCREEN_MENU_LCD,
+  SCREEN_MENU_LOCALE,
   SCREEN_MAX
 } Screen;
 
 View *screens[SCREEN_MAX];
+
+template<typename T>
+T rooling(T value, T min_value, T max_value, boolean plus) {
+  if(plus) {
+    value++;
+    if(value >= max_value) {
+      value = min_value;
+    }
+  } else {
+    if(value <= min_value) {
+      value = max_value;
+    }
+    value--;
+  }
+  return value;
+}
 
 static void change_screen(Screen screen) {
   current_screen = screens[screen];
@@ -72,10 +91,10 @@ static boolean edit_menu(item_entry *item, byte count, byte selected, boolean ed
 
 static void display_menu(item_entry *item, byte count, byte selected, boolean edit) {
   for(byte i = 0; i < 4; ++i) {
-    const char *entry = MY_STR("");
-    const char *value = NULL;
+    const char* entry = NULL;
+    const char* value = NULL;
     if(item != NULL && i < count) {
-      entry = item->text;
+      entry = GET_TEXT(item->text);
       if(item->get_fct != NULL) {
         value = item->get_fct();
       }
@@ -94,35 +113,39 @@ public:
   }
   
   virtual void update() {
-    switch(buttons[BUTTON_SELECT].check()) {
-      case ON:
-        change_screen(SCREEN_MENU_MAIN);
-      break;
+    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
+    byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
+    byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
+    if(select) {
+      change_screen(SCREEN_MENU_MAIN);
+      return;
     }
-  
-    switch(buttons[BUTTON_UP].check()) {
-      case ON:
-      case HOLD:
-#ifdef DEBUG
-        Serial.println(MY_STR("Increase target temp."));
-#endif //DEBUG
-        set_target_temperature(get_target_temperature() + 5);
-      break;
+    if(up && down) {
+      set_standby_mode(!get_standby_mode());
+      buttons[BUTTON_UP].acknowledge();
+      buttons[BUTTON_DOWN].acknowledge();
+      redraw();
+      return;
     }
-    switch(buttons[BUTTON_DOWN].check()) {
-      case ON:
-      case HOLD:
-#ifdef DEBUG
-        Serial.println(MY_STR("Decrease target temp."));
-#endif //DEBUG
-        set_target_temperature(get_target_temperature() - 5);
-      break;
+    if(up) {
+      set_target_temperature(get_target_temperature() + 5);
+      redraw();
+      return;
+    }
+    if(down) {
+      set_target_temperature(get_target_temperature() - 5);
+      redraw();
+      return;
     }
     redraw();
   }
   
   virtual void draw() {
-    lcd_print_target_temperature(get_target_temperature());
+    if(!get_standby_mode()) {
+      lcd_print_target_temperature(get_target_temperature());
+    } else {
+      lcd_print_standby_temperature(get_standby_temperature());
+    }
     lcd_print_iron_temperature(get_iron_temperature());
     lcd_print_heat(get_iron_pwm() > 0);
   }
@@ -140,8 +163,9 @@ public:
 class MainMenuScreen: public View {
 private:
   typedef enum {
-    LCD = 0,
-    IRON,
+    IRON = 0,
+    LCD,
+    LOCALE,
     MAX
   } Item;
   static item_entry menu_items[MAX];
@@ -151,43 +175,44 @@ public:
   }
   
   virtual void update() {
-    switch(buttons[BUTTON_BACK].check()) {
-      case ON:
-        change_screen(SCREEN_MAIN);
-      break;
+    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
+    byte back = BUTTON_ACTION(buttons[BUTTON_BACK].check());
+    byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
+    byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
+    if(back) {
+      change_screen(SCREEN_MAIN);
+      return;
     }
-    switch(buttons[BUTTON_SELECT].check()) {
-      case ON:
-        switch(display_state.menu.selected_item) {
-          case LCD:
-                  change_screen(SCREEN_MENU_LCD);
-          default:
+    if(select) {
+      switch(display_state.menu.selected_item) {
+        case LCD:
+          change_screen(SCREEN_MENU_LCD);
           break;
-        }
-      break;
+        case IRON:
+          change_screen(SCREEN_MENU_IRON);
+          break;
+        case LOCALE:
+          change_screen(SCREEN_MENU_LOCALE);
+          break;
+        default:
+        break;
+      }
+      return;
     }
-    switch(buttons[BUTTON_UP].check()) {
-      case ON:
-      case HOLD:
-          if(display_state.menu.selected_item < MAX -1) {
-            display_state.menu.selected_item++;
-          }
-          redraw();
-      break;
+    if(up) {
+      display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(MAX), true);
+      redraw();
+      return;
     }
-    switch(buttons[BUTTON_DOWN].check()) {
-      case ON:
-      case HOLD:
-          if(display_state.menu.selected_item > 0) {
-            display_state.menu.selected_item--;
-            redraw();
-          }
-      break;
+    if(down) {
+      display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(MAX), false);
+      redraw();
+      return;
     }
   }
   
   virtual void draw() {
-    lcd_print_title(MY_STR("Main menu"));
+    lcd_print_title(GET_TEXT(TT(MENU_MAIN_TITLE)));
     display_menu(menu_items, MAX, display_state.menu.selected_item, display_state.menu.edit);
   }
   
@@ -201,114 +226,72 @@ public:
 };
 
 item_entry MainMenuScreen::menu_items[MainMenuScreen::MAX] = {
-  {MY_STR("LCD"), NULL},
-  {MY_STR("Iron"), NULL}
+  {TT(MENU_IRON), NULL},
+  {TT(MENU_LCD), NULL},
+  {TT(MENU_LOCALE), NULL},
 };
 
 /*
- * LCD menu screen
+ * Abstract edit menu screen
  */
-class LCDMenuScreen: public View {
+class AbstractEditMenuScreen: public View {
 private:
-  typedef enum {
-    CONTRAST = 0,
-    BLACKLIGHT,
-    MAX
-  } Item;
-  static item_entry menu_items[MAX];
-  
-  static const char *get_contrast() {
-    return my_sprintf(MY_STR("%d"), get_lcd_contrast());
-  }
-  
-  static boolean set_contrast(boolean plus) {
-    set_lcd_contrast(get_lcd_contrast() + (plus? + 2: -2));
-    return true;
-  }
-  
-  static const char *get_backlight_mode() {
-    switch(get_lcd_backlight_mode()) {
-      case LCD_ON:
-        return MY_STR("On");
-      case LCD_OFF:
-      default:
-        return MY_STR("Off");
-    }
-  }
-  
-  static boolean set_backlight_mode(boolean plus) {
-    byte mode = (byte)get_lcd_backlight_mode();
-    if(plus) {
-      mode++;
-      if(mode >= LCD_MAX) {
-        mode = 0;
-      }
-    } else {
-      if(mode <= 0) {
-        mode = LCD_MAX;
-      }
-      mode--;
-    }
-    set_lcd_backlight_mode((lcd_mode)mode);
-    return true;
-  }
+  TranslatableText tt;
+  Screen parent_screen;
+  item_entry *menu_items;
+  byte items_count;
   
 public:
-  virtual ~LCDMenuScreen() {
+  AbstractEditMenuScreen(TranslatableText tt, Screen parent_screen, item_entry *menu_items, byte items_count): tt(tt), parent_screen(parent_screen), menu_items(menu_items), items_count(items_count) {
+  }
+  virtual ~AbstractEditMenuScreen() {
   }
   
   virtual void update() {
-    switch(buttons[BUTTON_BACK].check()) {
-      case ON:
-        if(display_state.menu.edit) {
-          display_state.menu.edit = false;
-          redraw();
-        } else {
-          change_screen(SCREEN_MENU_MAIN);
-        }
-      break;
-    }
-    switch(buttons[BUTTON_SELECT].check()) {
-      case ON:
-        display_state.menu.edit = true;
+    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
+    byte back = BUTTON_ACTION(buttons[BUTTON_BACK].check());
+    byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
+    byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
+    if(back) {
+      if(display_state.menu.edit) {
+        display_state.menu.edit = false;
         redraw();
-      break;
+      } else {
+        change_screen(parent_screen);
+      }
+      return;
     }
-    switch(buttons[BUTTON_UP].check()) {
-      case ON:
-      case HOLD:
-          if(!display_state.menu.edit) {
-            if(display_state.menu.selected_item < MAX -1) {
-              display_state.menu.selected_item++;
-              redraw();
-            }
-          } else {
-            if(edit_menu(menu_items, MAX, display_state.menu.selected_item, true)) {
-              redraw();
-            }
-          }
-      break;
+    if(select) {
+      display_state.menu.edit = true;
+      redraw();
+      return;
     }
-    switch(buttons[BUTTON_DOWN].check()) {
-      case ON:
-      case HOLD:
-          if(!display_state.menu.edit) {
-            if(display_state.menu.selected_item > 0) {
-              display_state.menu.selected_item--;
-              redraw();
-            }
-          } else {
-            if(edit_menu(menu_items, MAX, display_state.menu.selected_item, false)) {
-              redraw();
-            }
-          }
-      break;
+    if(up) {
+      if(!display_state.menu.edit) {
+        display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(items_count), true);
+        redraw();
+      } else {
+        if(edit_menu(menu_items, items_count, display_state.menu.selected_item, true)) {
+          redraw();
+        }
+      }
+      return;
+    }
+    if(down) {
+      if(!display_state.menu.edit) {
+        display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(items_count), false);
+        redraw();
+      } else {
+        if(edit_menu(menu_items, items_count, display_state.menu.selected_item, false)) {
+          redraw();
+        }
+      }
     }
   }
   
   virtual void draw() {
-    lcd_print_title(MY_STR("LCD menu"));
-    display_menu(menu_items, MAX, display_state.menu.selected_item, display_state.menu.edit);
+    lcd_print_title(GET_TEXT(tt));
+    display_menu(menu_items, items_count, display_state.menu.selected_item, display_state.menu.edit);
   }
   
   virtual void enter() {
@@ -320,9 +303,132 @@ public:
   }
 };
 
+/*
+ * LCD menu screen
+ */
+class LCDMenuScreen: public AbstractEditMenuScreen {
+private:
+  typedef enum {
+    CONTRAST = 0,
+    BLACKLIGHT,
+    MAX
+  } Item;
+  static item_entry menu_items[MAX];
+  
+  static const char* get_contrast() {
+    return my_sprintf("%d", get_lcd_contrast());
+  }
+  
+  static boolean set_contrast(boolean plus) {
+    set_lcd_contrast(get_lcd_contrast() + (plus? +2:-2));
+    return true;
+  }
+  
+  static const char* get_backlight_mode() {
+    switch(get_lcd_backlight_mode()) {
+      case LCD_ON:
+        return GET_TEXT(TT(T_ON));
+      case LCD_OFF:
+      default:
+        return GET_TEXT(TT(T_OFF));
+    }
+  }
+  
+  static boolean set_backlight_mode(boolean plus) {
+    set_lcd_backlight_mode((lcd_mode)rooling((byte)get_lcd_backlight_mode(), (byte)0, (byte)LCD_MAX, plus));
+    return true;
+  }
+  
+public:
+  LCDMenuScreen(): AbstractEditMenuScreen(TT(MENU_LCD_TITLE), SCREEN_MENU_MAIN, menu_items, MAX) {
+  }
+  virtual ~LCDMenuScreen() {
+  }
+};
+
 item_entry LCDMenuScreen::menu_items[LCDMenuScreen::MAX] = {
-  {MY_STR("Contrast"), get_contrast, set_contrast},
-  {MY_STR("Backlight"), get_backlight_mode, set_backlight_mode}
+  {TT(MENU_LCD_CONTRAST), get_contrast, set_contrast},
+  {TT(MENU_LCD_BACKLIGHT), get_backlight_mode, set_backlight_mode}
+};
+
+
+/*
+ * Iron menu screen
+ */
+class IronMenuScreen: public AbstractEditMenuScreen {
+private:
+  typedef enum {
+    STANDBY_TEMPERATURE = 0,
+    MAX
+  } Item;
+  static item_entry menu_items[MAX];
+  
+  static const char* get_standby_temperature() {
+    return my_sprintf("%d", ::get_standby_temperature());
+  }
+  
+  static boolean set_standby_temperature(boolean plus) {
+    ::set_standby_temperature(::get_standby_temperature() + (plus? +5: -5));
+    return true;
+  }
+public:
+  IronMenuScreen(): AbstractEditMenuScreen(TT(MENU_IRON_TITLE), SCREEN_MENU_MAIN, menu_items, MAX) {
+  }
+  virtual ~IronMenuScreen() {
+  }
+};
+
+item_entry IronMenuScreen::menu_items[IronMenuScreen::MAX] = {
+  {TT(MENU_IRON_STANDBY_TEMPERATURE), get_standby_temperature, set_standby_temperature},
+};
+
+
+/*
+ * Locale menu screen
+ */
+class LocaleMenuScreen: public AbstractEditMenuScreen {
+private:
+  typedef enum {
+    LANG = 0,
+    TEMPERATURE,
+    MAX
+  } Item;
+  static item_entry menu_items[MAX];
+  
+  static const char* get_lang() {
+    return lang_get_name((TranslatableLang)get_language());
+  }
+  
+  static boolean set_lang(boolean plus) {
+    set_language(rooling(get_language(), (byte)0, (byte)(TL(MAX)), plus));
+    lcd_clear();
+    return true;
+  }
+  
+  static const char* get_temperature_unit() {
+    switch(::get_temperature_unit()) {
+      case TEMP_FAHRENHEIT:
+        return DEGREE_SYM"F";
+      case TEMP_CELSIUS:
+      default:
+        return DEGREE_SYM"C";
+    }
+  }
+  
+  static boolean set_temperature_unit(boolean plus) {
+    ::set_temperature_unit((temperature_unit)rooling((byte)::get_temperature_unit(), (byte)0, (byte)TEMP_MAX, plus));
+    return true;
+  }
+public:
+  LocaleMenuScreen(): AbstractEditMenuScreen(TT(MENU_LOCALE_TITLE), SCREEN_MENU_MAIN, menu_items, MAX) {
+  }
+  virtual ~LocaleMenuScreen() {
+  }
+};
+
+item_entry LocaleMenuScreen::menu_items[LocaleMenuScreen::MAX] = {
+  {TT(MENU_LOCALE_LANG), get_lang, set_lang},
+  {TT(MENU_LOCALE_TEMPERATURE_UNIT), get_temperature_unit, set_temperature_unit},
 };
 
 /*
@@ -332,9 +438,13 @@ void display_init() {
   static MainScreen ms;
   static MainMenuScreen mms;
   static LCDMenuScreen lms;
+  static IronMenuScreen ims;
+  static LocaleMenuScreen localems;
   screens[SCREEN_MAIN] = &ms;
   screens[SCREEN_MENU_MAIN] = &mms;
+  screens[SCREEN_MENU_IRON] = &ims;
   screens[SCREEN_MENU_LCD] = &lms;
+  screens[SCREEN_MENU_LOCALE] = &localems;
   current_screen = &ms;
 }
 
@@ -360,7 +470,7 @@ void display_update() {
   displayed_screen->update();
   if(do_redraw) {
     #ifdef DEBUG
-    Serial.println(MY_STR("Draw!"));
+    Serial.println("Draw!");
     #endif //DEBUG
     displayed_screen->draw();
     lcd_display();
