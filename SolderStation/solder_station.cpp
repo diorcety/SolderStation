@@ -20,7 +20,7 @@ struct _memory_settings {
 } settings = {
   0,
   LCD_ON,
-  20,
+  30,
   150,
   0,
   TEMP_CELSIUS,

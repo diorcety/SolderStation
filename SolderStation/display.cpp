@@ -73,6 +73,10 @@ T rooling(T value, T min_value, T max_value, boolean plus) {
 
 static void change_screen(Screen screen) {
   current_screen = screens[screen];
+  buttons[BUTTON_SELECT].acknowledge();
+  buttons[BUTTON_BACK].acknowledge();
+  buttons[BUTTON_UP].acknowledge();
+  buttons[BUTTON_DOWN].acknowledge();
 }
 
 
@@ -128,12 +132,20 @@ public:
       return;
     }
     if(up) {
-      set_target_temperature(get_target_temperature() + 5);
+      if(!get_standby_mode()) {
+        set_target_temperature(get_target_temperature() + 5);
+      } else {
+        set_standby_temperature(get_standby_temperature() + 5);
+      }
       redraw();
       return;
     }
     if(down) {
-      set_target_temperature(get_target_temperature() - 5);
+      if(!get_standby_mode()) {
+        set_target_temperature(get_target_temperature() - 5);
+      } else {
+        set_standby_temperature(get_standby_temperature() - 5);
+      }
       redraw();
       return;
     }
@@ -358,10 +370,20 @@ item_entry LCDMenuScreen::menu_items[LCDMenuScreen::MAX] = {
 class IronMenuScreen: public AbstractEditMenuScreen {
 private:
   typedef enum {
-    STANDBY_TEMPERATURE = 0,
+    TARGET_TEMPERATURE = 0,
+    STANDBY_TEMPERATURE,
     MAX
   } Item;
   static item_entry menu_items[MAX];
+  
+  static const char* get_target_temperature() {
+    return my_sprintf("%d", ::get_target_temperature());
+  }
+  
+  static boolean set_target_temperature(boolean plus) {
+    ::set_target_temperature(::get_target_temperature() + (plus? +5: -5));
+    return true;
+  }
   
   static const char* get_standby_temperature() {
     return my_sprintf("%d", ::get_standby_temperature());
@@ -379,6 +401,7 @@ public:
 };
 
 item_entry IronMenuScreen::menu_items[IronMenuScreen::MAX] = {
+  {TT(MENU_IRON_TARGET_TEMPERATURE), get_target_temperature, set_target_temperature},
   {TT(MENU_IRON_STANDBY_TEMPERATURE), get_standby_temperature, set_standby_temperature},
 };
 

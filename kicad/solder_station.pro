@@ -1,4 +1,4 @@
-update=28/01/2015 22:17:32
+update=24/02/2015 08:41:16
 version=1
 last_client=kicad
 [cvpcb]
@@ -93,3 +93,4 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=arduino/arduino
+LibName32=library/library

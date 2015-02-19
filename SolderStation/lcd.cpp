@@ -11,6 +11,7 @@
 #define DC 9
 #define RESET 8
 #define BL  2
+#define LED A5
 
 #define FONT_WIDTH 6
 #define FONT_HEIGHT 8
@@ -21,6 +22,12 @@ Adafruit_PCD8544 display = Adafruit_PCD8544(DC, CS, RESET);
  * Print a temperature
  */
 static void __lcd_print_temperature(int temperature) {
+  switch(get_temperature_unit()) {
+    case TEMP_FAHRENHEIT:
+      temperature = (float)temperature * 1.8f + 32.0f;
+      break;
+  }
+  
   if(temperature<10) {
     display.print(' ');
   }
@@ -28,7 +35,7 @@ static void __lcd_print_temperature(int temperature) {
     display.print(' ');
   }
   display.print(temperature);
-  switch(::get_temperature_unit()) {
+  switch(get_temperature_unit()) {
     case TEMP_FAHRENHEIT:
       display.print(DEGREE_SYM"F");
       break;
@@ -60,9 +67,13 @@ void lcd_init() {
   display.setTextSize(1);
   display.setTextColor(BLACK);
   
-  // Switch of the Backlight
+  // Switch off the Backlight
   digitalWrite(BL, LOW); 
   pinMode(BL, OUTPUT);
+  
+  // Switch off the LED
+  digitalWrite(LED, LOW); 
+  pinMode(LED, OUTPUT);
 }
 
 /*
@@ -92,6 +103,7 @@ void lcd_clear() {
 void lcd_print_heat(boolean show) {
   display.setTextSize(2);
   display.setTextColor(BLACK, WHITE);
+  digitalWrite(LED, show); 
   const char* str = show? "****" : "    ";
   center_for_text(34, str, 2);
   display.print(str);

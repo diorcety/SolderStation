@@ -1,24 +1,24 @@
-Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 01/02/2015 11:18:53
+Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 23/02/2015 22:17:54
 
 BeginCmp
 TimeStamp = /54B0F663;
 Reference = C1;
 ValeurCmp = 10nF;
-IdModule  = SMD_Packages:SMD-0603;
+IdModule  = Capacitors_SMD:C_0603;
 EndCmp
 
 BeginCmp
-TimeStamp = /54CAD24A;
+TimeStamp = /54E59AE9;
 Reference = C2;
-ValeurCmp = CAPAPOL;
-IdModule  = Capacitors_ThroughHole:Capacitor30x51RM10;
+ValeurCmp = 10nF;
+IdModule  = Capacitors_SMD:C_0603;
 EndCmp
 
 BeginCmp
 TimeStamp = /54B0FE42;
 Reference = C3;
 ValeurCmp = 10nF;
-IdModule  = SMD_Packages:SMD-0603;
+IdModule  = Capacitors_SMD:C_0603;
 EndCmp
 
 BeginCmp
@@ -29,10 +29,10 @@ IdModule  = LEDs:LED-0805;
 EndCmp
 
 BeginCmp
-TimeStamp = /54CABD9B;
-Reference = D2;
-ValeurCmp = BRIDGE;
-IdModule  = footprint:DiodeBridge;
+TimeStamp = /54E3A642;
+Reference = F1;
+ValeurCmp = FUSE;
+IdModule  = footprint:SMD-3121;
 EndCmp
 
 BeginCmp
@@ -43,17 +43,10 @@ IdModule  = SMD_Packages:SOIC-8-W;
 EndCmp
 
 BeginCmp
-TimeStamp = /54B0F266;
-Reference = P1;
-ValeurCmp = JACK_2P;
-IdModule  = footprint:AC3MMxZV;
-EndCmp
-
-BeginCmp
 TimeStamp = /54B12906;
 Reference = P2;
 ValeurCmp = POWER;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
+IdModule  = Connect:bornier2;
 EndCmp
 
 BeginCmp
@@ -74,35 +67,21 @@ BeginCmp
 TimeStamp = /54C97D24;
 Reference = P5;
 ValeurCmp = JACK;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x03;
+IdModule  = Connect:bornier3;
 EndCmp
 
 BeginCmp
-TimeStamp = /54C97BD7;
-Reference = P6;
-ValeurCmp = JACK;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x03;
+TimeStamp = /54E598A2;
+Reference = Q1;
+ValeurCmp = PSMN*R*;
+IdModule  = footprint:LFPAK-4;
 EndCmp
 
 BeginCmp
-TimeStamp = /54CABC82;
-Reference = P7;
-ValeurCmp = TRANSFO;
-IdModule  = Connect:bornier2;
-EndCmp
-
-BeginCmp
-TimeStamp = /54CAD746;
-Reference = P8;
-ValeurCmp = POWER;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
-EndCmp
-
-BeginCmp
-TimeStamp = /54CAD7EC;
-Reference = P9;
-ValeurCmp = POWER;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
+TimeStamp = /54E5990B;
+Reference = Q2;
+ValeurCmp = PSMN*R*;
+IdModule  = footprint:LFPAK-4;
 EndCmp
 
 BeginCmp
@@ -127,16 +106,9 @@ IdModule  = Resistors_SMD:R_0603;
 EndCmp
 
 BeginCmp
-TimeStamp = /54B1119D;
+TimeStamp = /54E5AF0B;
 Reference = R4;
 ValeurCmp = 10K;
-IdModule  = Resistors_SMD:R_0603;
-EndCmp
-
-BeginCmp
-TimeStamp = /54B1056B;
-Reference = R5;
-ValeurCmp = 1K;
 IdModule  = Resistors_SMD:R_0603;
 EndCmp
 
@@ -225,20 +197,6 @@ IdModule  = footprint:SW_65_45;
 EndCmp
 
 BeginCmp
-TimeStamp = /54B10A82;
-Reference = T1;
-ValeurCmp = IRF7416;
-IdModule  = SMD_Packages:SOIC-8-W;
-EndCmp
-
-BeginCmp
-TimeStamp = /54B1101F;
-Reference = T2;
-ValeurCmp = BSN20;
-IdModule  = SMD_Packages:SOT-23;
-EndCmp
-
-BeginCmp
 TimeStamp = /54B5A089;
 Reference = T3;
 ValeurCmp = BSN20;
@@ -250,6 +208,13 @@ TimeStamp = /54BBC0FA;
 Reference = U1;
 ValeurCmp = arduino_mini;
 IdModule  = arduino:arduino_mini;
+EndCmp
+
+BeginCmp
+TimeStamp = /54EB8B1F;
+Reference = U2;
+ValeurCmp = ROE-0505S;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x04;
 EndCmp
 
 EndListe
