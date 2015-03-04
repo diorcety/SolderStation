@@ -1,6 +1,8 @@
 #ifndef _SOLDER_STATION_H
 #define _SOLDER_STATION_H
 
+#include "config.h"
+
 // For byte type
 #include <Arduino.h>
 
@@ -23,6 +25,8 @@ void set_iron_temperature(int tTmp);
 int get_iron_pwm();
 
 void set_iron_pwm(int pwm);
+
+#ifdef LCD_MODULE
 
 typedef enum _lcd_mode {
   LCD_OFF,
@@ -51,6 +55,8 @@ typedef enum _temperature_unit {
 temperature_unit get_temperature_unit();
 
 void set_temperature_unit(temperature_unit ts);
+
+#endif //LCD_MODULE
 
 /*
  * Load settings from the memory

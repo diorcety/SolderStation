@@ -3,6 +3,7 @@
 #include "display.h"
 #include "controls.h"
 #include "lcd.h"
+#include "led.h"
 #include "utils.h"
 #include "lang.h"
 
@@ -46,17 +47,33 @@ static View *current_screen = NULL;
 
 typedef enum {
   SCREEN_MAIN = 0,
+#ifdef MENU_MODULE
   SCREEN_MENU_MAIN,
   SCREEN_MENU_IRON,
   SCREEN_MENU_LCD,
   SCREEN_MENU_LOCALE,
   SCREEN_MAX
+#endif //MENU_MODULE
 } Screen;
 
 View *screens[SCREEN_MAX];
 
+static void change_screen(Screen screen) {
+  current_screen = screens[screen];
+  buttons[BUTTON_SELECT].acknowledge();
+  buttons[BUTTON_BACK].acknowledge();
+  buttons[BUTTON_UP].acknowledge();
+  buttons[BUTTON_DOWN].acknowledge();
+}
+
+#ifdef MENU_MODULE
+
+/*
+ * Generic menu display function
+ */
+ 
 template<typename T>
-T rooling(T value, T min_value, T max_value, boolean plus) {
+static T rooling(T value, T min_value, T max_value, boolean plus) {
   if(plus) {
     value++;
     if(value >= max_value) {
@@ -70,19 +87,6 @@ T rooling(T value, T min_value, T max_value, boolean plus) {
   }
   return value;
 }
-
-static void change_screen(Screen screen) {
-  current_screen = screens[screen];
-  buttons[BUTTON_SELECT].acknowledge();
-  buttons[BUTTON_BACK].acknowledge();
-  buttons[BUTTON_UP].acknowledge();
-  buttons[BUTTON_DOWN].acknowledge();
-}
-
-
-/*
- * Generic menu display function
- */
  
 static boolean edit_menu(item_entry *item, byte count, byte selected, boolean edit) {
   if(item != NULL && selected < count) {
@@ -108,6 +112,8 @@ static void display_menu(item_entry *item, byte count, byte selected, boolean ed
   }
 }
 
+#endif //MENU_MODULE
+
 /*
  * Main screen
  */
@@ -117,13 +123,15 @@ public:
   }
   
   virtual void update() {
-    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
     byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
     byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
+#ifdef MENU_MODULE
+    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
     if(select) {
       change_screen(SCREEN_MENU_MAIN);
       return;
     }
+#endif //MENU_MODULE
     if(up && down) {
       set_standby_mode(!get_standby_mode());
       buttons[BUTTON_UP].acknowledge();
@@ -132,20 +140,28 @@ public:
       return;
     }
     if(up) {
+#ifdef STANDBY_LIVE_EDIT
       if(!get_standby_mode()) {
+#endif //STANDBY_LIVE_EDIT
         set_target_temperature(get_target_temperature() + 5);
+#ifdef STANDBY_LIVE_EDIT
       } else {
         set_standby_temperature(get_standby_temperature() + 5);
       }
+#endif //STANDBY_LIVE_EDIT
       redraw();
       return;
     }
     if(down) {
+#ifdef STANDBY_LIVE_EDIT
       if(!get_standby_mode()) {
+#endif //STANDBY_LIVE_EDIT
         set_target_temperature(get_target_temperature() - 5);
+#ifdef STANDBY_LIVE_EDIT
       } else {
         set_standby_temperature(get_standby_temperature() - 5);
       }
+#endif //STANDBY_LIVE_EDIT
       redraw();
       return;
     }
@@ -153,13 +169,20 @@ public:
   }
   
   virtual void draw() {
+#ifdef LCD_MODULE
     if(!get_standby_mode()) {
       lcd_print_target_temperature(get_target_temperature());
     } else {
       lcd_print_standby_temperature(get_standby_temperature());
     }
     lcd_print_iron_temperature(get_iron_temperature());
+#ifdef LCD_SHOW_HEAT
     lcd_print_heat(get_iron_pwm() > 0);
+#endif //LCD_SHOW_HEAT
+#endif //LCD_MODULE
+#ifdef SEG7_MODULE
+    seg7_print(get_iron_temperature());
+#endif //SEG7_MODULE
   }
   
   virtual void enter() {
@@ -169,6 +192,7 @@ public:
   }
 };
 
+#ifdef MENU_MODULE
 /*
  * Main menu screen
  */
@@ -454,20 +478,24 @@ item_entry LocaleMenuScreen::menu_items[LocaleMenuScreen::MAX] = {
   {TT(MENU_LOCALE_TEMPERATURE_UNIT), get_temperature_unit, set_temperature_unit},
 };
 
+#endif //MENU_MODULE
+
 /*
  * Init display stuff
  */
 void display_init() {
   static MainScreen ms;
-  static MainMenuScreen mms;
-  static LCDMenuScreen lms;
-  static IronMenuScreen ims;
-  static LocaleMenuScreen localems;
   screens[SCREEN_MAIN] = &ms;
+#ifdef MENU_MODULE
+  static MainMenuScreen mms;
   screens[SCREEN_MENU_MAIN] = &mms;
-  screens[SCREEN_MENU_IRON] = &ims;
+  static LCDMenuScreen lms;
   screens[SCREEN_MENU_LCD] = &lms;
+  static IronMenuScreen ims;
+  screens[SCREEN_MENU_IRON] = &ims;
+  static LocaleMenuScreen localems;
   screens[SCREEN_MENU_LOCALE] = &localems;
+#endif //MENU_MODULE
   current_screen = &ms;
 }
 
@@ -480,8 +508,9 @@ void display_update() {
     if(displayed_screen != NULL) {
       displayed_screen->exit();
     }
-    
+#ifdef LCD_MODULE
     lcd_clear();
+#endif //LCD_MODULE
     memset(&display_state, '\0', sizeof(display_state));
     do_redraw = true;
     
@@ -492,11 +521,16 @@ void display_update() {
   // Update screen
   displayed_screen->update();
   if(do_redraw) {
-    #ifdef DEBUG
-    Serial.println("Draw!");
-    #endif //DEBUG
+    DEBUG_LOG_LN("Draw!");
     displayed_screen->draw();
+#ifdef LCD_MODULE
     lcd_display();
+#endif //LCD_MODULE
     do_redraw = false;
   }
+  
+  // Global HMI stuff
+#ifdef LED_MODULE
+  led_show_heat(get_iron_pwm() > 0);
+#endif //LED_MODULE
 }

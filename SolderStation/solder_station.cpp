@@ -6,24 +6,28 @@
 #include "lcd.h"
 #include "lang.h"
 
-int iron_temperature = 0;
-byte iron_pwm = 0;
-boolean standby_mode = false;
+static int iron_temperature = 0;
+static byte iron_pwm = 0;
+static boolean standby_mode = false;
 
 struct _memory_settings {
   int target_temperature;
+  int standby_temperature;
+#ifdef LCD_MODULE
   lcd_mode lcd_backlight_mode;
   byte lcd_contrast;
-  int standby_temperature;
   byte language;
   temperature_unit tu;
+#endif //LCD_MODULE
 } settings = {
-  0,
+  300,
+  150,
+#ifdef LCD_MODULE
   LCD_ON,
   30,
-  150,
   0,
   TEMP_CELSIUS,
+#endif //LCD_MODULE
 };
 
 int get_target_temperature() {
@@ -71,6 +75,9 @@ void set_iron_pwm(int pwm) {
   iron_pwm = pwm > 255 ? 255 : (pwm < 0 ? 0 : pwm);
 }
 
+
+#ifdef LCD_MODULE
+
 lcd_mode get_lcd_backlight_mode() {
   return settings.lcd_backlight_mode;
 }
@@ -106,39 +113,39 @@ void set_temperature_unit(temperature_unit tu) {
   settings.tu = tu;
 }
 
+#endif //LCD_MODULE
+
 /*
  * Load settings from the memory
  */
 void load_settings() {
-#ifdef DEBUG
-  Serial.println("Load settings");
-#endif //DEBUG
+  DEBUG_LOG_LN("Load settings");
+  
   memory_load_settings(0, &settings, sizeof(settings));
-#ifdef DEBUG
-  Serial.println(my_sprintf("Target temperature: %d", settings.target_temperature));
-  Serial.println(my_sprintf("Standby temperature: %d", settings.standby_temperature));
-  Serial.println(my_sprintf("LCD backlight: %d", settings.lcd_backlight_mode));
-  Serial.println(my_sprintf("LCD Contrast: %d", settings.lcd_contrast));
-  Serial.println(my_sprintf("Language: %d", settings.language));
-  Serial.println(my_sprintf("Temperature Unit: %d", settings.tu));
-#endif //DEBUG
-
-  // Force to update
-  set_lcd_backlight_mode(get_lcd_backlight_mode());
-  set_lcd_contrast(get_lcd_contrast());
-  set_language(get_language());
+  
+  DEBUG_LOG_LN(my_sprintf("Target temperature: %d", settings.target_temperature));
+  DEBUG_LOG_LN(my_sprintf("Standby temperature: %d", settings.standby_temperature));
+#ifdef LCD_MODULE
+  DEBUG_LOG_LN(my_sprintf("LCD backlight: %d", settings.lcd_backlight_mode));
+  DEBUG_LOG_LN(my_sprintf("LCD Contrast: %d", settings.lcd_contrast));
+  DEBUG_LOG_LN(my_sprintf("Language: %d", settings.language));
+  DEBUG_LOG_LN(my_sprintf("Temperature Unit: %d", settings.tu));
+#endif //LCD_MODULE
 }
 
 /*
  * Save settings to the memory
  */
 void save_settings() {
-#ifdef DEBUG
-  Serial.println("Save settings");
-#endif //DEBUG
+  DEBUG_LOG_LN("Save settings");
   memory_save_settings(0, &settings, sizeof(settings));
 }
 
 void update_settings() {
+#ifdef LCD_MODULE
+  set_lcd_backlight_mode(get_lcd_backlight_mode());
+  set_lcd_contrast(get_lcd_contrast());
+  set_language(get_language());
+#endif //LCD_MODULE
 }
 

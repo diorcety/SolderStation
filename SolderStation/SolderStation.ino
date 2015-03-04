@@ -11,10 +11,12 @@
 #include "solder_station.h"
 #include "iron.h"
 #include "lcd.h"
+#include "led.h"
 #include "display.h"
 #include "controls.h"
 #include "memory.h"
 #include "lang.h"
+#include "utils.h"
 
 /*
  * Main functions
@@ -31,18 +33,14 @@ int compute_iron_pwm(int actual_temperature, int target_temperature) {
 
 void update_iron_temperature() {
    int iron_temperature = get_iron_temperature();
-#ifdef DEBUG
-   Serial.print("Iron Temp.=");
-   Serial.println(iron_temperature);
-#endif //DEBUG
+   DEBUG_LOG("Iron Temp.=");
+   DEBUG_LOG_LN(iron_temperature);
    int temperature = get_standby_mode()? get_standby_temperature():get_target_temperature();
    int iron_pwm = compute_iron_pwm(iron_temperature, temperature);
    set_iron_pwm(iron_pwm);
    iron_pwm = get_iron_pwm();
-#ifdef DEBUG
-   Serial.print("Iron PWM=");
-   Serial.println(iron_pwm);
-#endif //DEBUG
+   DEBUG_LOG("Iron PWM=");
+   DEBUG_LOG_LN(iron_pwm);
    iron_set_pwm(iron_pwm);
 }
 
@@ -66,19 +64,32 @@ void update_iron() {
  * Setup function
  */
 void setup() {
-#ifdef DEBUG
+#ifdef SERIAL_MODULE
   Serial.begin(115200);
-  Serial.println("Booting...");
-#endif //DEBUG
+#endif //SERIAL_MODULE
+  DEBUG_LOG("Booting...");
 
   // Init modules
   iron_init();
+#ifdef LCD_MODULE
   lcd_init();
+#endif //LCD_MODULE
+#ifdef LED_MODULE
+  led_init();
+#endif //LED_MODULE
+#ifdef SEG7_MODULE
+  seg7_init();
+#endif //SEG7_MODULE
   controls_init();
   display_init();
    
-  // Load settings
-  load_settings();
+  // Check if we load default settings or not
+  if(!buttons[BUTTON_UP].check(Button::OneShot) || !buttons[BUTTON_DOWN].check(Button::OneShot)) {
+    // Load settings
+    load_settings();
+  }
+  buttons[BUTTON_UP].acknowledge();
+  buttons[BUTTON_DOWN].acknowledge();
   
   // Init timers
   uiTimer.setInterval(DELAY_UI_LOOP, display_update);
@@ -86,9 +97,7 @@ void setup() {
   settingsTimer.setInterval(DELAY_SETTINGS_LOOP, update_settings);
   saveTimer.setInterval(DELAY_SAVE_SETTINGS_LOOP, save_settings);
     
-#ifdef DEBUG
-  Serial.println("Solder station V0.1");
-#endif //DEBUG
+  DEBUG_LOG("Solder station V0.1");
 
   // Update data
   update_iron();

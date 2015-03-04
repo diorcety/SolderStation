@@ -34,7 +34,7 @@ byte buttons_state[BUTTON_MAX] = {
  */
 void controls_init() {
   for(int i = 0; i < BUTTON_MAX; ++i) {
-    buttons[i].setMode(OneShotTimer);
+    buttons[i].setMode(Button::OneShotTimer);
     buttons[i].setTimer(750);
     buttons[i].setRefresh(150);
     buttons[i].assign(GET_STATE(buttons_state[i], PIN));

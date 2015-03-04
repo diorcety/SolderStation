@@ -9,47 +9,50 @@
 
 #include <inttypes.h>
 
-#define OneShot 0
-#define Memory 1
-#define Timer 2
-#define OneShotTimer 3
-#define MemoryTimer 4
-
-#define OFF 0
-#define ON 1
-#define PRESSED 2
-#define HOLD 3
-#define RELEASED 4
-
 typedef uint8_t byte;
-
 
 class Button {
 public:
+	enum Mode {
+		OneShot,
+		Memory,
+		Timer,
+		OneShotTimer,
+		MemoryTimer
+	};
+	
+	enum State {
+		OFF = 0,
+		ON,
+		PRESSED,
+		HOLD,
+		RELEASED
+	};
+public:
 	Button();
 	Button(bool inverted);
-	Button(byte type);
-	Button(byte type, bool inverted);
+	Button(Mode type);
+	Button(Mode type, bool inverted);
 
 	void assign(byte pin);
-	byte check();
-	byte check(byte mode_v);
+	State check();
+	State check(Mode mode_v);
 	void acknowledge();
+	void reset();
 	unsigned int getHoldTime();
 
 	// Setters
-	void setMode(byte type_v);
+	void setMode(Mode type_v);
 	void setInverted(bool inverted_v);
 	void setTimer(unsigned int t);
 	void setRefresh(unsigned int r);
 	void turnOnPullUp();
 	void turnOffPullUp();
-	
-	
+
 private:
-	void init(byte mode_v, bool inverted);
+	void init(Mode mode_v, bool inverted);
 	byte pin;
-	byte mode;
+	Mode mode;
 	bool inverted;
 	unsigned long hold_timer;
 	unsigned long refresh_timer;

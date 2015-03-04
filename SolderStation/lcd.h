@@ -1,6 +1,8 @@
 #ifndef _LCD_H
 #define _LCD_H
 
+#ifdef LCD_MODULE
+
 // For boolean type
 #include <Arduino.h>
 
@@ -65,6 +67,8 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
  * Display on the lcd
  */
 void lcd_display();
+
+#endif //LCD_MODULE
 
 #endif //_LCD_H
 

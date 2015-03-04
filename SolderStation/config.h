@@ -46,7 +46,32 @@
 #define BUTTON_BACK_PULL 1
 #define BUTTON_BACK_INVERTED 1
 
-#ifdef DEBUG
+// Behaviour switches
+#define STANDBY_LIVE_EDIT
+
+// Menu module
+#define MENU_MODULE
+
+// LCD Module
+#define LCD_MODULE
+#define LCD_SHOW_HEAT
+#define LCD_PCD8544_MODULE
+#define LCD_PCD8544_CS 10
+#define LCD_PCD8544_DC 9
+#define LCD_PCD8544_RESET 8
+#define LCD_PCD8544_BL  2
+
+// LED Module
+#define LED_MODULE
+#define LED_HEAT A3
+#define LED_HEAT_INVERTED 0
+
+// Serial Module
+#define SERIAL_MODULE
+#define SERIAL_BAUD 115200
+#define SERIAL_DEBUG
+
+#ifdef SERIAL_MODULE
 #include <HardwareSerial.h>
 #endif
 

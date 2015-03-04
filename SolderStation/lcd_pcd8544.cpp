@@ -7,16 +7,28 @@
 
 #include "solder_station.h"
 
-#define CS 10
-#define DC 9
-#define RESET 8
-#define BL  2
-#define LED A5
+#ifdef LCD_PCD8544_MODULE
 
 #define FONT_WIDTH 6
 #define FONT_HEIGHT 8
 
-Adafruit_PCD8544 display = Adafruit_PCD8544(DC, CS, RESET);
+#ifndef LCD_PCD8544_DC
+#error Missing configuration of LCD_PCD8544_DC
+#endif
+
+#ifndef LCD_PCD8544_CS
+#error Missing configuration of LCD_PCD8544_CS
+#endif
+
+#ifndef LCD_PCD8544_RESET
+#error Missing configuration of LCD_PCD8544_RESET
+#endif
+
+#ifndef LCD_PCD8544_BL
+#error Missing configuration of LCD_PCD8544_BL
+#endif
+
+Adafruit_PCD8544 display = Adafruit_PCD8544(LCD_PCD8544_DC, LCD_PCD8544_CS, LCD_PCD8544_RESET);
 
 /*
  * Print a temperature
@@ -68,19 +80,15 @@ void lcd_init() {
   display.setTextColor(BLACK);
   
   // Switch off the Backlight
-  digitalWrite(BL, LOW); 
-  pinMode(BL, OUTPUT);
-  
-  // Switch off the LED
-  digitalWrite(LED, LOW); 
-  pinMode(LED, OUTPUT);
+  digitalWrite(LCD_PCD8544_BL, LOW); 
+  pinMode(LCD_PCD8544_BL, OUTPUT);
 }
 
 /*
  * Enable/Disable backlight
  */
 void lcd_set_backlight(boolean enable) {
-  digitalWrite(BL, enable); 
+  digitalWrite(LCD_PCD8544_BL, enable); 
 }
 
 /*
@@ -103,7 +111,6 @@ void lcd_clear() {
 void lcd_print_heat(boolean show) {
   display.setTextSize(2);
   display.setTextColor(BLACK, WHITE);
-  digitalWrite(LED, show); 
   const char* str = show? "****" : "    ";
   center_for_text(34, str, 2);
   display.print(str);
@@ -191,4 +198,6 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
 void lcd_display() {
     display.display();
 }
+
+#endif //LCD_PCD8544_MODULE
 
