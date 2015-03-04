@@ -3,6 +3,14 @@
 #include "utils.h"
 #include <Arduino.h>
 
+#ifndef PIN_PWM_OUT
+#error Missing configuration of PIN_PWM_OUT
+#endif //PIN_PWM_OUT
+
+#ifndef PIN_PROBE_IN
+#error Missing configuration of PIN_PROBE_IN
+#endif //PIN_PROBE_IN
+
 //R2=68K:
 #define ADC_TO_TEMP_GAIN 0.39
 #define ADC_TO_TEMP_OFFSET 23.9
@@ -15,6 +23,7 @@
  * Init iron stuff
  */
 void iron_init() {
+  DEBUG_LOG_LN("Init Iron");
   //set pin directions:
   pinMode(PIN_PWM_OUT, OUTPUT);
   pinMode(PIN_PROBE_IN, INPUT);

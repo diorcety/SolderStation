@@ -1,6 +1,8 @@
 #ifndef _LCD_H
 #define _LCD_H
 
+#include "config.h"
+
 #ifdef LCD_MODULE
 
 // For boolean type

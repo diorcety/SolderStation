@@ -12,6 +12,7 @@
 #include "iron.h"
 #include "lcd.h"
 #include "led.h"
+#include "seg7.h"
 #include "display.h"
 #include "controls.h"
 #include "memory.h"
@@ -67,7 +68,7 @@ void setup() {
 #ifdef SERIAL_MODULE
   Serial.begin(115200);
 #endif //SERIAL_MODULE
-  DEBUG_LOG("Booting...");
+  DEBUG_LOG_LN("Booting...");
 
   // Init modules
   iron_init();
@@ -87,6 +88,8 @@ void setup() {
   if(!buttons[BUTTON_UP].check(Button::OneShot) || !buttons[BUTTON_DOWN].check(Button::OneShot)) {
     // Load settings
     load_settings();
+  } else {
+    DEBUG_LOG_LN("Load default settings");
   }
   buttons[BUTTON_UP].acknowledge();
   buttons[BUTTON_DOWN].acknowledge();
@@ -94,10 +97,12 @@ void setup() {
   // Init timers
   uiTimer.setInterval(DELAY_UI_LOOP, display_update);
   ironTimer.setInterval(DELAY_MAIN_LOOP, update_iron);
+#if 0 // Not really usefull for the moment
   settingsTimer.setInterval(DELAY_SETTINGS_LOOP, update_settings);
+#endif
   saveTimer.setInterval(DELAY_SAVE_SETTINGS_LOOP, save_settings);
     
-  DEBUG_LOG("Solder station V0.1");
+  DEBUG_LOG_LN("Solder station V0.1");
 
   // Update data
   update_iron();

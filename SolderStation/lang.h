@@ -1,6 +1,8 @@
 #ifndef _LANG_H
 #define _LANG_H
 
+#ifdef LCD_MODULE
+
 #define TT_PREFIX(x) TranslatableText_##x
 enum TranslatableText {
   TT_PREFIX(LANG),
@@ -38,5 +40,7 @@ TranslatableLang lang_get_current();
 void lang_set_current(TranslatableLang tl);
 
 #define TL(x) TL_PREFIX(x)
+
+#endif //LCD_MODULE
 
 #endif //_LANG_H

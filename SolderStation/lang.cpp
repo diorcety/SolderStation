@@ -5,6 +5,8 @@
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 
+#ifdef LCD_MODULE
+
 /*PROGMEM*/ static const char * en_translation[] = {
   "En",
   "On",
@@ -70,3 +72,5 @@ const char * GET_TEXT(TranslatableText tt) {
   */
   return translations[currentLang][tt];
 }
+
+#endif //LCD_MODULE

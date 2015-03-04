@@ -1,5 +1,7 @@
 #include "config.h"
 #include "lcd.h"
+#include "utils.h"
+
 #include <SPI.h>
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
@@ -14,19 +16,19 @@
 
 #ifndef LCD_PCD8544_DC
 #error Missing configuration of LCD_PCD8544_DC
-#endif
+#endif //LCD_PCD8544_DC
 
 #ifndef LCD_PCD8544_CS
 #error Missing configuration of LCD_PCD8544_CS
-#endif
+#endif //LCD_PCD8544_CS
 
 #ifndef LCD_PCD8544_RESET
 #error Missing configuration of LCD_PCD8544_RESET
-#endif
+#endif //LCD_PCD8544_RESET
 
 #ifndef LCD_PCD8544_BL
 #error Missing configuration of LCD_PCD8544_BL
-#endif
+#endif //LCD_PCD8544_BL
 
 Adafruit_PCD8544 display = Adafruit_PCD8544(LCD_PCD8544_DC, LCD_PCD8544_CS, LCD_PCD8544_RESET);
 
@@ -34,10 +36,8 @@ Adafruit_PCD8544 display = Adafruit_PCD8544(LCD_PCD8544_DC, LCD_PCD8544_CS, LCD_
  * Print a temperature
  */
 static void __lcd_print_temperature(int temperature) {
-  switch(get_temperature_unit()) {
-    case TEMP_FAHRENHEIT:
+  if(get_temperature_unit() == TEMP_FAHRENHEIT) {
       temperature = (float)temperature * 1.8f + 32.0f;
-      break;
   }
   
   if(temperature<10) {
@@ -46,6 +46,7 @@ static void __lcd_print_temperature(int temperature) {
   if(temperature<100) {
     display.print(' ');
   }
+
   display.print(temperature);
   switch(get_temperature_unit()) {
     case TEMP_FAHRENHEIT:
@@ -73,6 +74,7 @@ static void right_for_text(uint16_t y, const char *text, byte size) {
  * Init LCD stuff
  */
 void lcd_init() {
+  DEBUG_LOG_LN("Init LCD PCD8544");
   display.begin();
   display.setContrast(30);
   display.clearDisplay();
