@@ -493,33 +493,47 @@ item_entry LocaleMenuScreen::menu_items[LocaleMenuScreen::MAX] = {
 
 static void change_screen(Screen screen) {
   current_screen = screen;
-  if(view != NULL) {
-    delete view;
-  }
-  switch(screen) {
-    case SCREEN_MENU_MAIN:
-      view = new MainMenuScreen();
-    break;
-    case SCREEN_MENU_LCD:
-      view = new LCDMenuScreen();
-    break;
-    case SCREEN_MENU_IRON:
-      view = new IronMenuScreen();
-    break;
-    case SCREEN_MENU_LOCALE:
-      view = new LocaleMenuScreen();
-    break;
-    default:
-    case SCREEN_MAIN:
-      view = new MainScreen();
-    break;
-  }
   buttons[BUTTON_UP].acknowledge();
   buttons[BUTTON_DOWN].acknowledge();
 #ifdef BUTTON_EXTENDED
   buttons[BUTTON_SELECT].acknowledge();
   buttons[BUTTON_BACK].acknowledge();
 #endif //BUTTON_EXTENDED
+}
+
+// Placeement new
+inline void *operator new(size_t, void *buf) { return buf; }
+
+static void change_view() {
+  static union {
+    byte mainMsData[sizeof(MainMenuScreen)];
+    byte lcdMsData[sizeof(LCDMenuScreen)];
+    byte IronMsData[sizeof(IronMenuScreen)];
+    byte LocaleMsData[sizeof(LocaleMenuScreen)];
+    byte msData[sizeof(MainScreen)];
+  } view_memory;
+  
+  if(view != NULL) {
+    view->~View();
+  }
+  view = NULL;
+  switch(current_screen) {
+    case SCREEN_MENU_MAIN:
+      view = new(&view_memory) MainMenuScreen();
+    break;
+    case SCREEN_MENU_LCD:
+      view = new(&view_memory) LCDMenuScreen();
+    break;
+    case SCREEN_MENU_IRON:
+      view = new(&view_memory) IronMenuScreen();
+    break;
+    case SCREEN_MENU_LOCALE:
+      view = new(&view_memory) LocaleMenuScreen();
+    break;
+    case SCREEN_MAIN:
+      view = new(&view_memory) MainScreen();
+    break;
+  }
 }
 
 /*
@@ -544,20 +558,27 @@ void display_update() {
 #endif //LCD_MODULE
     do_redraw = true;
     
+    change_view();
+    
     displayed_screen = current_screen;
-    view->enter();
+    if(view != NULL) {
+      view->enter();
+    }
   }
   
-  // Update screen
-  view->update();
-  if(do_redraw) {
-    DEBUG_LOG_LN("Draw!");
-    view->draw();
+  if(view != NULL) {
+    // Update screen
+    view->update();
+    if(do_redraw) {
+      DEBUG_LOG_LN("Draw!");
+      view->draw();
 #ifdef LCD_MODULE
-    lcd_display();
+      lcd_display();
 #endif //LCD_MODULE
-    do_redraw = false;
+      do_redraw = false;
+    }
   }
+  
   // Global HMI stuff
 #ifdef LED_MODULE
   led_show_heat(get_iron_pwm() > 0);
