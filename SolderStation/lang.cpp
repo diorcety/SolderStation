@@ -7,42 +7,74 @@
 
 #ifdef LCD_MODULE
 
-/*PROGMEM*/ static const char * en_translation[] = {
-  "En",
-  "On",
-  "Off",
-  "Main menu",
-  "LCD",
-  "Iron",
-  "Localization",
-  "LCD Menu",
-  "Contrast",
-  "Backlight",
-  "Iron",
-  "Target T"DEGREE_SYM,
-  "Standby T"DEGREE_SYM,
-  "Localization",
-  "Language",
-  "T"DEGREE_SYM" unit",
+static const char EN_LANG[] PROGMEM = "En";
+static const char EN_T_ON[] PROGMEM = "On";
+static const char EN_T_OFF[] PROGMEM = "Off";
+static const char EN_MENU_MAIN_TITLE[] PROGMEM = "Main menu";
+static const char EN_MENU_LCD[] PROGMEM = "LCD";
+static const char EN_MENU_IRON[] PROGMEM = "Iron";
+static const char EN_MENU_LOCALE[] PROGMEM = "Localization";
+static const char EN_MENU_LCD_TITLE[] PROGMEM = "LCD Menu";
+static const char EN_MENU_LCD_CONTRAST[] PROGMEM = "Contrast";
+static const char EN_MENU_LCD_BACKLIGHT[] PROGMEM = "Backlight";
+static const char EN_MENU_IRON_TITLE[] PROGMEM = "Iron";
+static const char EN_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "Target T"DEGREE_SYM;
+static const char EN_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "Standby T"DEGREE_SYM;
+static const char EN_MENU_LOCALE_TITLE[] PROGMEM = "Localization";
+static const char EN_MENU_LOCALE_LANG[] PROGMEM = "Language";
+static const char EN_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "T"DEGREE_SYM" unit";
+static const char * en_translation[] PROGMEM = {
+  EN_LANG,
+  EN_T_ON,
+  EN_T_OFF,
+  EN_MENU_MAIN_TITLE,
+  EN_MENU_LCD,
+  EN_MENU_IRON,
+  EN_MENU_LOCALE,
+  EN_MENU_LCD_TITLE,
+  EN_MENU_LCD_CONTRAST,
+  EN_MENU_LCD_BACKLIGHT,
+  EN_MENU_IRON_TITLE,
+  EN_MENU_IRON_TARGET_TEMPERATURE,
+  EN_MENU_IRON_STANDBY_TEMPERATURE,
+  EN_MENU_LOCALE_TITLE,
+  EN_MENU_LOCALE_LANG,
+  EN_MENU_LOCALE_TEMPERATURE_UNIT,
 };
 
-/*PROGMEM*/ static const char * fr_translation[] = {
-  "Fr",
-  "On",
-  "Off",
-  "Menu principal",
-  "LCD",
-  "Fer",
-  "Localisation",
-  "LCD",
-  "Contrast",
-  "Eclairage",
-  "Fer",
-  "T"DEGREE_SYM" consig.",
-  "T"DEGREE_SYM" repos",
-  "Localisation",
-  "Langage",
-  "Unite T"DEGREE_SYM"",
+static const char FR_LANG[] PROGMEM = "Fr";
+static const char FR_T_ON[] PROGMEM = "On";
+static const char FR_T_OFF[] PROGMEM = "Off";
+static const char FR_MENU_MAIN_TITLE[] PROGMEM = "Menu principal";
+static const char FR_MENU_LCD[] PROGMEM = "LCD";
+static const char FR_MENU_IRON[] PROGMEM = "Fer";
+static const char FR_MENU_LOCALE[] PROGMEM = "Localisation";
+static const char FR_MENU_LCD_TITLE[] PROGMEM = "LCD";
+static const char FR_MENU_LCD_CONTRAST[] PROGMEM = "Contrast";
+static const char FR_MENU_LCD_BACKLIGHT[] PROGMEM = "Eclairage";
+static const char FR_MENU_IRON_TITLE[] PROGMEM = "Fer";
+static const char FR_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" consig.";
+static const char FR_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" repos";
+static const char FR_MENU_LOCALE_TITLE[] PROGMEM = "Localisation";
+static const char FR_MENU_LOCALE_LANG[] PROGMEM = "Langage";
+static const char FR_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "Unite T"DEGREE_SYM;
+static const char * fr_translation[] PROGMEM = {
+  FR_LANG,
+  FR_T_ON,
+  FR_T_OFF,
+  FR_MENU_MAIN_TITLE,
+  FR_MENU_LCD,
+  FR_MENU_IRON,
+  FR_MENU_LOCALE,
+  FR_MENU_LCD_TITLE,
+  FR_MENU_LCD_CONTRAST,
+  FR_MENU_LCD_BACKLIGHT,
+  FR_MENU_IRON_TITLE,
+  FR_MENU_IRON_TARGET_TEMPERATURE,
+  FR_MENU_IRON_STANDBY_TEMPERATURE,
+  FR_MENU_LOCALE_TITLE,
+  FR_MENU_LOCALE_LANG,
+  FR_MENU_LOCALE_TEMPERATURE_UNIT,
 };
 
 static const char ** translations[TL(MAX)] = {
@@ -65,12 +97,10 @@ void lang_set_current(TranslatableLang tl) {
 }
 
 const char * GET_TEXT(TranslatableText tt) {
-  /*
   static char buffer[128];
   strcpy_P(buffer, (char*)pgm_read_word(&(translations[0][tt])));
   return buffer;
-  */
-  return translations[currentLang][tt];
+  //return translations[currentLang][tt];
 }
 
 #endif //LCD_MODULE

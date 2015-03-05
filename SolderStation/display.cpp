@@ -8,20 +8,6 @@
 #include "utils.h"
 #include "lang.h"
 
-typedef union _display_state_struct {
-  struct main_state {
-    unsigned long last_edit_time;
-  } main;
-#ifdef MENU_MODULE
-  struct menu_state {
-    byte selected_item;
-    boolean edit;
-  } menu;
-#endif //MENU_MODULE
-} display_state_struct;
-
-static display_state_struct display_state;
-
 class View {
 public:
   virtual ~View() = 0;
@@ -40,11 +26,11 @@ static void redraw() {
   do_redraw = true;
 }
 
-static View *displayed_screen = NULL;
-static View *current_screen = NULL;
+static View *view = NULL;
 
 typedef enum {
-  SCREEN_MAIN = 0,
+  SCREEN_NONE = 0,
+  SCREEN_MAIN,
 #ifdef MENU_MODULE
   SCREEN_MENU_MAIN,
   SCREEN_MENU_IRON,
@@ -54,17 +40,9 @@ typedef enum {
   SCREEN_MAX
 } Screen;
 
-View *screens[SCREEN_MAX];
-
-static void change_screen(Screen screen) {
-  current_screen = screens[screen];
-  buttons[BUTTON_UP].acknowledge();
-  buttons[BUTTON_DOWN].acknowledge();
-#ifdef BUTTON_EXTENDED
-  buttons[BUTTON_SELECT].acknowledge();
-  buttons[BUTTON_BACK].acknowledge();
-#endif //BUTTON_EXTENDED
-}
+static Screen displayed_screen = SCREEN_NONE;
+static Screen current_screen = SCREEN_NONE;
+static void change_screen(Screen screen);
 
 #ifdef MENU_MODULE
 
@@ -105,11 +83,13 @@ static boolean edit_menu(item_entry *item, byte count, byte selected, boolean ed
 }
 
 static void display_menu(item_entry *item, byte count, byte selected, boolean edit) {
+  char buffer[128];
   for(byte i = 0; i < 4; ++i) {
-    const char* entry = NULL;
-    const char* value = NULL;
+    const char *entry = NULL;
+    const char *value = NULL;
     if(item != NULL && i < count) {
-      entry = GET_TEXT(item->text);
+      strcpy(buffer, GET_TEXT(item->text));
+      entry = buffer;
       if(item->get_fct != NULL) {
         value = item->get_fct();
       }
@@ -125,6 +105,9 @@ static void display_menu(item_entry *item, byte count, byte selected, boolean ed
  * Main screen
  */
 class MainScreen: public View {
+private:
+  unsigned long last_edit_time;
+  
 public:
   virtual ~MainScreen() {
   }
@@ -151,11 +134,11 @@ public:
     if(up) {
       if(!get_standby_mode()) {
         set_target_temperature(get_target_temperature() + 5);
-        display_state.main.last_edit_time = millis() + DELAY_EDIT_TIME;
+        last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
 #ifdef STANDBY_LIVE_EDIT
         set_standby_temperature(get_standby_temperature() + 5);
-        display_state.main.last_edit_time = millis() + DELAY_EDIT_TIME;
+        last_edit_time = millis() + DELAY_EDIT_TIME;
 #endif //STANDBY_LIVE_EDIT
       }
       redraw();
@@ -164,11 +147,11 @@ public:
     if(down) {
       if(!get_standby_mode()) {
         set_target_temperature(get_target_temperature() - 5);
-        display_state.main.last_edit_time = millis() + DELAY_EDIT_TIME; 
+        last_edit_time = millis() + DELAY_EDIT_TIME; 
       } else {
 #ifdef BEHAVIOUR_STANDBY_LIVE_EDIT
         set_standby_temperature(get_standby_temperature() - 5);
-        display_state.main.last_edit_time = millis() + DELAY_EDIT_TIME;
+        last_edit_time = millis() + DELAY_EDIT_TIME;
 #endif //BEHAVIOUR_STANDBY_LIVE_EDIT
       }
       redraw();
@@ -222,6 +205,8 @@ public:
  */
 class MainMenuScreen: public View {
 private:
+  byte selected_item;
+  boolean edit;
   typedef enum {
     IRON = 0,
     LCD,
@@ -244,7 +229,7 @@ public:
       return;
     }
     if(select) {
-      switch(display_state.menu.selected_item) {
+      switch(selected_item) {
         case LCD:
           change_screen(SCREEN_MENU_LCD);
           break;
@@ -260,12 +245,12 @@ public:
       return;
     }
     if(up) {
-      display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(MAX), true);
+      selected_item = rooling(selected_item, (byte)0, (byte)(MAX), true);
       redraw();
       return;
     }
     if(down) {
-      display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(MAX), false);
+      selected_item = rooling(selected_item, (byte)0, (byte)(MAX), false);
       redraw();
       return;
     }
@@ -273,12 +258,12 @@ public:
   
   virtual void draw() {
     lcd_print_title(GET_TEXT(TT(MENU_MAIN_TITLE)));
-    display_menu(menu_items, MAX, display_state.menu.selected_item, display_state.menu.edit);
+    display_menu(menu_items, MAX, selected_item, edit);
   }
   
   virtual void enter() {
-    display_state.menu.selected_item = 0;
-    display_state.menu.edit = false;
+    selected_item = 0;
+    edit = false;
   }
   
   virtual void exit() {
@@ -296,6 +281,8 @@ item_entry MainMenuScreen::menu_items[MainMenuScreen::MAX] = {
  */
 class AbstractEditMenuScreen: public View {
 private:
+  byte selected_item;
+  boolean edit;
   TranslatableText tt;
   Screen parent_screen;
   item_entry *menu_items;
@@ -313,8 +300,8 @@ public:
     byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
     byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
     if(back) {
-      if(display_state.menu.edit) {
-        display_state.menu.edit = false;
+      if(edit) {
+        edit = false;
         redraw();
       } else {
         change_screen(parent_screen);
@@ -322,27 +309,27 @@ public:
       return;
     }
     if(select) {
-      display_state.menu.edit = true;
+      edit = true;
       redraw();
       return;
     }
     if(up) {
-      if(!display_state.menu.edit) {
-        display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(items_count), true);
+      if(!edit) {
+        selected_item = rooling(selected_item, (byte)0, (byte)(items_count), true);
         redraw();
       } else {
-        if(edit_menu(menu_items, items_count, display_state.menu.selected_item, true)) {
+        if(edit_menu(menu_items, items_count, selected_item, true)) {
           redraw();
         }
       }
       return;
     }
     if(down) {
-      if(!display_state.menu.edit) {
-        display_state.menu.selected_item = rooling(display_state.menu.selected_item, (byte)0, (byte)(items_count), false);
+      if(!edit) {
+        selected_item = rooling(selected_item, (byte)0, (byte)(items_count), false);
         redraw();
       } else {
-        if(edit_menu(menu_items, items_count, display_state.menu.selected_item, false)) {
+        if(edit_menu(menu_items, items_count, selected_item, false)) {
           redraw();
         }
       }
@@ -351,12 +338,12 @@ public:
   
   virtual void draw() {
     lcd_print_title(GET_TEXT(tt));
-    display_menu(menu_items, items_count, display_state.menu.selected_item, display_state.menu.edit);
+    display_menu(menu_items, items_count, selected_item, edit);
   }
   
   virtual void enter() {
-    display_state.menu.selected_item = 0;
-    display_state.menu.edit = false;
+    selected_item = 0;
+    edit = false;
   }
   
   virtual void exit() {
@@ -504,24 +491,43 @@ item_entry LocaleMenuScreen::menu_items[LocaleMenuScreen::MAX] = {
 
 #endif //MENU_MODULE
 
+static void change_screen(Screen screen) {
+  current_screen = screen;
+  if(view != NULL) {
+    delete view;
+  }
+  switch(screen) {
+    case SCREEN_MENU_MAIN:
+      view = new MainMenuScreen();
+    break;
+    case SCREEN_MENU_LCD:
+      view = new LCDMenuScreen();
+    break;
+    case SCREEN_MENU_IRON:
+      view = new IronMenuScreen();
+    break;
+    case SCREEN_MENU_LOCALE:
+      view = new LocaleMenuScreen();
+    break;
+    default:
+    case SCREEN_MAIN:
+      view = new MainScreen();
+    break;
+  }
+  buttons[BUTTON_UP].acknowledge();
+  buttons[BUTTON_DOWN].acknowledge();
+#ifdef BUTTON_EXTENDED
+  buttons[BUTTON_SELECT].acknowledge();
+  buttons[BUTTON_BACK].acknowledge();
+#endif //BUTTON_EXTENDED
+}
+
 /*
  * Init display stuff
  */
 void display_init() {
   DEBUG_LOG_LN("Init Display");
-  static MainScreen ms;
-  screens[SCREEN_MAIN] = &ms;
-#ifdef MENU_MODULE
-  static MainMenuScreen mms;
-  screens[SCREEN_MENU_MAIN] = &mms;
-  static LCDMenuScreen lms;
-  screens[SCREEN_MENU_LCD] = &lms;
-  static IronMenuScreen ims;
-  screens[SCREEN_MENU_IRON] = &ims;
-  static LocaleMenuScreen localems;
-  screens[SCREEN_MENU_LOCALE] = &localems;
-#endif //MENU_MODULE
-  current_screen = &ms;
+  change_screen(SCREEN_MAIN);
 }
 
 /*
@@ -530,24 +536,23 @@ void display_init() {
 void display_update() {
   // Change screen?
   if(current_screen != displayed_screen) {
-    if(displayed_screen != NULL) {
-      displayed_screen->exit();
+    if(view != NULL) {
+      view->exit();
     }
 #ifdef LCD_MODULE
     lcd_clear();
 #endif //LCD_MODULE
-    memset(&display_state, '\0', sizeof(display_state));
     do_redraw = true;
     
     displayed_screen = current_screen;
-    displayed_screen->enter();
+    view->enter();
   }
   
   // Update screen
-  displayed_screen->update();
+  view->update();
   if(do_redraw) {
     DEBUG_LOG_LN("Draw!");
-    displayed_screen->draw();
+    view->draw();
 #ifdef LCD_MODULE
     lcd_display();
 #endif //LCD_MODULE
