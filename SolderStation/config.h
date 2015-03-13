@@ -19,6 +19,8 @@
 
 #define MAX_IRON_TEMP_IN_DEGREES 400
 
+#define TEMP_STEP 5
+
 #include "config_xxx.h"
 //#include "config_dc3mkb.h"
 

@@ -133,11 +133,11 @@ public:
 #endif //BEHAVIOUR_COMBO_STANDBY
     if(up) {
       if(!get_standby_mode()) {
-        set_target_temperature(get_target_temperature() + 5);
+        set_target_temperature(get_target_temperature() + TEMP_STEP);
         last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
 #ifdef STANDBY_LIVE_EDIT
-        set_standby_temperature(get_standby_temperature() + 5);
+        set_standby_temperature(get_standby_temperature() + TEMP_STEP);
         last_edit_time = millis() + DELAY_EDIT_TIME;
 #endif //STANDBY_LIVE_EDIT
       }
@@ -146,11 +146,11 @@ public:
     }
     if(down) {
       if(!get_standby_mode()) {
-        set_target_temperature(get_target_temperature() - 5);
+        set_target_temperature(get_target_temperature() - TEMP_STEP);
         last_edit_time = millis() + DELAY_EDIT_TIME; 
       } else {
 #ifdef BEHAVIOUR_STANDBY_LIVE_EDIT
-        set_standby_temperature(get_standby_temperature() - 5);
+        set_standby_temperature(get_standby_temperature() - TEMP_STEP);
         last_edit_time = millis() + DELAY_EDIT_TIME;
 #endif //BEHAVIOUR_STANDBY_LIVE_EDIT
       }
