@@ -13,8 +13,6 @@ public:
   virtual ~View() = 0;
   virtual void update() = 0;
   virtual void draw() = 0;
-  virtual void enter() = 0;
-  virtual void exit() = 0;
 };
 
 
@@ -49,7 +47,7 @@ static void change_screen(Screen screen);
 typedef struct _item_entry {
   TranslatableText text;
   const char* (*get_fct)(void);
-  boolean (*set_fct)(boolean);
+  boolean (*set_fct)(int);
 } item_entry;
 
 
@@ -58,25 +56,27 @@ typedef struct _item_entry {
  */
  
 template<typename T>
-static T rooling(T value, T min_value, T max_value, boolean plus) {
-  if(plus) {
-    value++;
-    if(value >= max_value) {
-      value = min_value;
-    }
-  } else {
-    if(value <= min_value) {
-      value = max_value;
-    }
-    value--;
+static T rooling(T value, T min_value, T max_value, int inc_value) {
+  int diff = max_value - min_value;
+  bool sub = inc_value < 0;
+  if(sub) {
+    inc_value = -inc_value;
   }
+  inc_value = inc_value % diff;
+  if(sub) {
+    inc_value = -inc_value;
+  }
+  
+  value -= min_value;
+  inc_value = inc_value + value + diff;
+  value = inc_value % diff + min_value;
   return value;
 }
  
-static boolean edit_menu(item_entry *item, byte count, byte selected, boolean edit) {
+static boolean edit_menu(item_entry *item, byte count, byte selected, int inc_value) {
   if(item != NULL && selected < count) {
     if(item[selected].set_fct != NULL) {
-      return item[selected].set_fct(edit);
+      return item[selected].set_fct(inc_value);
     }
   }
   return false;
@@ -109,14 +109,19 @@ private:
   unsigned long last_edit_time;
   
 public:
+  MainScreen() {
+            DEBUG_LOG_LN("MainScreen");
+    last_edit_time = 0;
+  }
+
   virtual ~MainScreen() {
   }
   
   virtual void update() {
-    byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
-    byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
+    int up = controls[CONTROL_UP]->getValue();
+    int down = controls[CONTROL_DOWN]->getValue();
 #ifdef MENU_MODULE
-    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
+    int select = controls[CONTROL_SELECT]->getValue();
     if(select) {
       change_screen(SCREEN_MENU_MAIN);
       return;
@@ -125,19 +130,20 @@ public:
 #ifdef BEHAVIOUR_COMBO_STANDBY
     if(up && down) {
       set_standby_mode(!get_standby_mode());
-      buttons[BUTTON_UP].acknowledge();
-      buttons[BUTTON_DOWN].acknowledge();
+      controls[CONTROL_UP]->acknowledge();
+      controls[CONTROL_DOWN]->acknowledge();
       redraw();
       return;
     }
 #endif //BEHAVIOUR_COMBO_STANDBY
+              
     if(up) {
       if(!get_standby_mode()) {
-        set_target_temperature(get_target_temperature() + TEMP_STEP);
+        set_target_temperature(get_target_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
 #ifdef STANDBY_LIVE_EDIT
-        set_standby_temperature(get_standby_temperature() + TEMP_STEP);
+        set_standby_temperature(get_standby_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
 #endif //STANDBY_LIVE_EDIT
       }
@@ -146,11 +152,11 @@ public:
     }
     if(down) {
       if(!get_standby_mode()) {
-        set_target_temperature(get_target_temperature() - TEMP_STEP);
+        set_target_temperature(get_target_temperature() - TEMP_STEP * down);
         last_edit_time = millis() + DELAY_EDIT_TIME; 
       } else {
 #ifdef BEHAVIOUR_STANDBY_LIVE_EDIT
-        set_standby_temperature(get_standby_temperature() - TEMP_STEP);
+        set_standby_temperature(get_standby_temperature() - TEMP_STEP * down);
         last_edit_time = millis() + DELAY_EDIT_TIME;
 #endif //BEHAVIOUR_STANDBY_LIVE_EDIT
       }
@@ -166,7 +172,7 @@ public:
       lcd_print_target_temperature(get_target_temperature());
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
-      if(display_state.main.last_edit_time < millis()) {
+      if(last_edit_time < millis()) {
         seg7_print(get_iron_temperature());
       } else {
         seg7_print(get_target_temperature());
@@ -177,7 +183,7 @@ public:
       lcd_print_standby_temperature(get_standby_temperature());
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
-      if(display_state.main.last_edit_time < millis()) {
+      if(last_edit_time < millis()) {
         seg7_print(get_iron_temperature());
       } else {
         seg7_print(get_standby_temperature());
@@ -190,12 +196,6 @@ public:
     lcd_print_heat(get_iron_pwm() > 0);
 #endif //LCD_SHOW_HEAT
 #endif //LCD_MODULE
-  }
-  
-  virtual void enter() {
-  }
-  
-  virtual void exit() {
   }
 };
 
@@ -216,14 +216,19 @@ private:
   static item_entry menu_items[MAX];
   
 public:
+  MainMenuScreen() {
+    selected_item = 0;
+    edit = false;
+  }
+
   virtual ~MainMenuScreen() {
   }
   
   virtual void update() {
-    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
-    byte back = BUTTON_ACTION(buttons[BUTTON_BACK].check());
-    byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
-    byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
+    int select = controls[CONTROL_SELECT]->getValue();
+    int back = controls[CONTROL_BACK]->getValue();
+    int up = controls[CONTROL_UP]->getValue();
+    int down = controls[CONTROL_DOWN]->getValue();
     if(back) {
       change_screen(SCREEN_MAIN);
       return;
@@ -245,12 +250,12 @@ public:
       return;
     }
     if(up) {
-      selected_item = rooling(selected_item, (byte)0, (byte)(MAX), true);
+      selected_item = rooling(selected_item, (byte)0, (byte)(MAX), up);
       redraw();
       return;
     }
     if(down) {
-      selected_item = rooling(selected_item, (byte)0, (byte)(MAX), false);
+      selected_item = rooling(selected_item, (byte)0, (byte)(MAX), -down);
       redraw();
       return;
     }
@@ -259,14 +264,6 @@ public:
   virtual void draw() {
     lcd_print_title(GET_TEXT(TT(MENU_MAIN_TITLE)));
     display_menu(menu_items, MAX, selected_item, edit);
-  }
-  
-  virtual void enter() {
-    selected_item = 0;
-    edit = false;
-  }
-  
-  virtual void exit() {
   }
 };
 
@@ -290,15 +287,18 @@ private:
   
 public:
   AbstractEditMenuScreen(TranslatableText tt, Screen parent_screen, item_entry *menu_items, byte items_count): tt(tt), parent_screen(parent_screen), menu_items(menu_items), items_count(items_count) {
+    selected_item = 0;
+    edit = false;
   }
+  
   virtual ~AbstractEditMenuScreen() {
   }
   
   virtual void update() {
-    byte select = BUTTON_ACTION(buttons[BUTTON_SELECT].check());
-    byte back = BUTTON_ACTION(buttons[BUTTON_BACK].check());
-    byte up = BUTTON_ACTION(buttons[BUTTON_UP].check());
-    byte down = BUTTON_ACTION(buttons[BUTTON_DOWN].check());
+    int select = controls[CONTROL_SELECT]->getValue();
+    int back = controls[CONTROL_BACK]->getValue();
+    int up = controls[CONTROL_UP]->getValue();
+    int down = controls[CONTROL_DOWN]->getValue();
     if(back) {
       if(edit) {
         edit = false;
@@ -315,10 +315,10 @@ public:
     }
     if(up) {
       if(!edit) {
-        selected_item = rooling(selected_item, (byte)0, (byte)(items_count), true);
+        selected_item = rooling(selected_item, (byte)0, (byte)(items_count), up);
         redraw();
       } else {
-        if(edit_menu(menu_items, items_count, selected_item, true)) {
+        if(edit_menu(menu_items, items_count, selected_item, up)) {
           redraw();
         }
       }
@@ -326,10 +326,10 @@ public:
     }
     if(down) {
       if(!edit) {
-        selected_item = rooling(selected_item, (byte)0, (byte)(items_count), false);
+        selected_item = rooling(selected_item, (byte)0, (byte)(items_count), -down);
         redraw();
       } else {
-        if(edit_menu(menu_items, items_count, selected_item, false)) {
+        if(edit_menu(menu_items, items_count, selected_item, -down)) {
           redraw();
         }
       }
@@ -339,14 +339,6 @@ public:
   virtual void draw() {
     lcd_print_title(GET_TEXT(tt));
     display_menu(menu_items, items_count, selected_item, edit);
-  }
-  
-  virtual void enter() {
-    selected_item = 0;
-    edit = false;
-  }
-  
-  virtual void exit() {
   }
 };
 
@@ -366,8 +358,8 @@ private:
     return my_sprintf("%d", get_lcd_contrast());
   }
   
-  static boolean set_contrast(boolean plus) {
-    set_lcd_contrast(get_lcd_contrast() + (plus? +2:-2));
+  static boolean set_contrast(int inc) {
+    set_lcd_contrast(get_lcd_contrast() + 2*inc);
     return true;
   }
   
@@ -381,8 +373,8 @@ private:
     }
   }
   
-  static boolean set_backlight_mode(boolean plus) {
-    set_lcd_backlight_mode((lcd_mode)rooling((byte)get_lcd_backlight_mode(), (byte)0, (byte)LCD_MAX, plus));
+  static boolean set_backlight_mode(int inc) {
+    set_lcd_backlight_mode((lcd_mode)rooling((byte)get_lcd_backlight_mode(), (byte)0, (byte)LCD_MAX, inc));
     return true;
   }
   
@@ -415,8 +407,8 @@ private:
     return my_sprintf("%d", ::get_target_temperature());
   }
   
-  static boolean set_target_temperature(boolean plus) {
-    ::set_target_temperature(::get_target_temperature() + (plus? +5: -5));
+  static boolean set_target_temperature(int inc) {
+    ::set_target_temperature(::get_target_temperature() + TEMP_STEP*inc);
     return true;
   }
   
@@ -424,8 +416,8 @@ private:
     return my_sprintf("%d", ::get_standby_temperature());
   }
   
-  static boolean set_standby_temperature(boolean plus) {
-    ::set_standby_temperature(::get_standby_temperature() + (plus? +5: -5));
+  static boolean set_standby_temperature(int inc) {
+    ::set_standby_temperature(::get_standby_temperature() + TEMP_STEP*inc);
     return true;
   }
 public:
@@ -457,8 +449,8 @@ private:
     return lang_get_name((TranslatableLang)get_language());
   }
   
-  static boolean set_lang(boolean plus) {
-    set_language(rooling(get_language(), (byte)0, (byte)(TL(MAX)), plus));
+  static boolean set_lang(int inc) {
+    set_language(rooling(get_language(), (byte)0, (byte)(TL(MAX)), inc));
     lcd_clear();
     return true;
   }
@@ -473,8 +465,8 @@ private:
     }
   }
   
-  static boolean set_temperature_unit(boolean plus) {
-    ::set_temperature_unit((temperature_unit)rooling((byte)::get_temperature_unit(), (byte)0, (byte)TEMP_MAX, plus));
+  static boolean set_temperature_unit(int inc) {
+    ::set_temperature_unit((temperature_unit)rooling((byte)::get_temperature_unit(), (byte)0, (byte)TEMP_MAX, inc));
     return true;
   }
 public:
@@ -493,23 +485,22 @@ item_entry LocaleMenuScreen::menu_items[LocaleMenuScreen::MAX] = {
 
 static void change_screen(Screen screen) {
   current_screen = screen;
-  buttons[BUTTON_UP].acknowledge();
-  buttons[BUTTON_DOWN].acknowledge();
-#ifdef BUTTON_EXTENDED
-  buttons[BUTTON_SELECT].acknowledge();
-  buttons[BUTTON_BACK].acknowledge();
-#endif //BUTTON_EXTENDED
+  for(int i = 0; i < CONTROL_MAX; ++i) {
+    controls[i]->acknowledge();
+  }
 }
 
-// Placeement new
+// Placement new
 inline void *operator new(size_t, void *buf) { return buf; }
 
 static void change_view() {
   static union {
+#ifdef MENU_MODULE
     byte mainMsData[sizeof(MainMenuScreen)];
     byte lcdMsData[sizeof(LCDMenuScreen)];
     byte IronMsData[sizeof(IronMenuScreen)];
     byte LocaleMsData[sizeof(LocaleMenuScreen)];
+#endif //MENU_MODULE
     byte msData[sizeof(MainScreen)];
   } view_memory;
   
@@ -518,6 +509,7 @@ static void change_view() {
   }
   view = NULL;
   switch(current_screen) {
+#ifdef MENU_MODULE
     case SCREEN_MENU_MAIN:
       view = new(&view_memory) MainMenuScreen();
     break;
@@ -530,6 +522,7 @@ static void change_view() {
     case SCREEN_MENU_LOCALE:
       view = new(&view_memory) LocaleMenuScreen();
     break;
+#endif //MENU_MODULE
     case SCREEN_MAIN:
       view = new(&view_memory) MainScreen();
     break;
@@ -550,9 +543,6 @@ void display_init() {
 void display_update() {
   // Change screen?
   if(current_screen != displayed_screen) {
-    if(view != NULL) {
-      view->exit();
-    }
 #ifdef LCD_MODULE
     lcd_clear();
 #endif //LCD_MODULE
@@ -561,9 +551,6 @@ void display_update() {
     change_view();
     
     displayed_screen = current_screen;
-    if(view != NULL) {
-      view->enter();
-    }
   }
   
   if(view != NULL) {
@@ -583,4 +570,7 @@ void display_update() {
 #ifdef LED_MODULE
   led_show_heat(get_iron_pwm() > 0);
 #endif //LED_MODULE
+#ifdef BUTTON_STANDBY
+  set_standby_mode(controls[CONTROL_STANDBY]->getValue() > 0);
+#endif //BUTTON_STANDBY
 }

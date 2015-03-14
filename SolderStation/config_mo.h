@@ -6,6 +6,7 @@
 #define PIN_PROBE_IN A0
 
 // Controls
+#define ROTATING_UP_DOWN
 #define BUTTON_UP_PIN 13
 #define BUTTON_UP_PULL 1
 #define BUTTON_UP_INVERTED 1
@@ -13,6 +14,11 @@
 #define BUTTON_DOWN_PIN 12
 #define BUTTON_DOWN_PULL 1
 #define BUTTON_DOWN_INVERTED 1
+
+#define BUTTON_STANDBY
+#define BUTTON_STANDBY_PIN 16
+#define BUTTON_STANDBY_PULL 1
+#define BUTTON_STANDBY_INVERTED 1
 
 // SEG7 Module
 #define SEG7_MODULE

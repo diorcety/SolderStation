@@ -11,6 +11,7 @@ ARDUINO_LIBS = \
 	Adafruit_PCD8544 \
 	Buttons \
 	SimpleTimer \
+	PinChangeInt \
 	EEPROM \
 	SPI
 

@@ -3,20 +3,28 @@
 
 #include <buttons.h>
 
-#define BUTTON_UP 0
-#define BUTTON_DOWN 1
+enum Controls {
+  CONTROL_UP = 0,
+  CONTROL_DOWN,
 #ifdef BUTTON_EXTENDED
-#define BUTTON_SELECT 2
-#define BUTTON_BACK 3
-#define BUTTON_MAX 4
-#else //BUTTON_EXTENDED
-#define BUTTON_MAX 2
+  CONTROL_SELECT,
+  CONTROL_BACK,
 #endif //BUTTON_EXTENDED
+#ifdef BUTTON_STANDBY
+  CONTROL_STANDBY,
+#endif //BUTTON_STANDBY
+  CONTROL_MAX,
+};
 
 void controls_init();
 
-extern Button buttons[BUTTON_MAX];
+class Control {
+public:
+  virtual ~Control() = 0;
+  virtual int getValue() = 0;
+  virtual void acknowledge() = 0;
+};
 
-#define BUTTON_ACTION(b) (b&0x3)
+extern Control* controls[CONTROL_MAX];
 
 #endif //_CONTROLS_H

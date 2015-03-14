@@ -23,6 +23,11 @@
 #define BUTTON_BACK_PULL 1
 #define BUTTON_BACK_INVERTED 1
 
+#define BUTTON_STANDBY
+#define BUTTON_STANDBY_PIN 16
+#define BUTTON_STANDBY_PULL 1
+#define BUTTON_STANDBY_INVERTED 1
+
 // Menu module
 #define MENU_MODULE
 
@@ -43,11 +48,5 @@
 // Serial Module
 #define SERIAL_MODULE
 #define SERIAL_BAUD 115200
-
-// Behaviour switches
-#define BEHAVIOUR_COMBO_STANDBY
-#ifdef BEHAVIOUR_COMBO_STANDBY
-#define BEHAVIOUR_STANDBY_LIVE_EDIT
-#endif //BEHAVIOUR_COMBO_STANDBY
 
 #endif //_CONFIG_XXX_H

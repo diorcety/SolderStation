@@ -23,7 +23,7 @@ static const char EN_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "Standby T"DEGREE
 static const char EN_MENU_LOCALE_TITLE[] PROGMEM = "Localization";
 static const char EN_MENU_LOCALE_LANG[] PROGMEM = "Language";
 static const char EN_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "T"DEGREE_SYM" unit";
-static const char * en_translation[] PROGMEM = {
+static const char * const en_translation[] PROGMEM = {
   EN_LANG,
   EN_T_ON,
   EN_T_OFF,
@@ -58,7 +58,7 @@ static const char FR_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" re
 static const char FR_MENU_LOCALE_TITLE[] PROGMEM = "Localisation";
 static const char FR_MENU_LOCALE_LANG[] PROGMEM = "Langage";
 static const char FR_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "Unite T"DEGREE_SYM;
-static const char * fr_translation[] PROGMEM = {
+static const char * const fr_translation[] PROGMEM = {
   FR_LANG,
   FR_T_ON,
   FR_T_OFF,
@@ -77,7 +77,7 @@ static const char * fr_translation[] PROGMEM = {
   FR_MENU_LOCALE_TEMPERATURE_UNIT,
 };
 
-static const char ** translations[TL(MAX)] = {
+static const char * const* const translations[TL(MAX)] = {
   en_translation,
   fr_translation,
 };

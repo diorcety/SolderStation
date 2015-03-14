@@ -10,6 +10,8 @@ static int iron_temperature = 0;
 static byte iron_pwm = 0;
 static boolean standby_mode = false;
 
+#define CHECKSUM_VALUE 0xDEADBEAF
+
 struct _memory_settings {
   int target_temperature;
   int standby_temperature;
@@ -18,6 +20,7 @@ struct _memory_settings {
   byte lcd_contrast;
   byte language;
   temperature_unit tu;
+  unsigned long checksum;
 #endif //LCD_MODULE
 } settings = {
   300,
@@ -28,6 +31,7 @@ struct _memory_settings {
   0,
   TEMP_CELSIUS,
 #endif //LCD_MODULE
+  CHECKSUM_VALUE
 };
 
 int get_target_temperature() {
@@ -121,7 +125,15 @@ void set_temperature_unit(temperature_unit tu) {
 void load_settings() {
   DEBUG_LOG_LN("Load settings");
   
-  memory_load_settings(0, &settings, sizeof(settings));
+  unsigned long checksum;
+  memory_load_settings(sizeof(settings) - sizeof(unsigned long), &checksum, sizeof(unsigned long));
+  
+  if(checksum == CHECKSUM_VALUE) {
+    DEBUG_LOG_LN("Load from memory");
+    memory_load_settings(0, &settings, sizeof(settings) - sizeof(unsigned long));
+  } else {
+    DEBUG_LOG_LN("Memory is incorrect. Using default values");
+  }
   
   DEBUG_LOG_LN(my_sprintf("Target temperature: %d", settings.target_temperature));
   DEBUG_LOG_LN(my_sprintf("Standby temperature: %d", settings.standby_temperature));
