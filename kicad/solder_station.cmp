@@ -1,15 +1,8 @@
-Cmp-Mod V01 Created by Cvpcb (2014-12-04 BZR 5312)-product   date = 23/02/2015 22:17:54
+Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 22/04/2015 20:17:14
 
 BeginCmp
 TimeStamp = /54B0F663;
 Reference = C1;
-ValeurCmp = 10nF;
-IdModule  = Capacitors_SMD:C_0603;
-EndCmp
-
-BeginCmp
-TimeStamp = /54E59AE9;
-Reference = C2;
 ValeurCmp = 10nF;
 IdModule  = Capacitors_SMD:C_0603;
 EndCmp
@@ -53,7 +46,7 @@ BeginCmp
 TimeStamp = /54B12D31;
 Reference = P3;
 ValeurCmp = MCU;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x04;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x05;
 EndCmp
 
 BeginCmp
@@ -67,21 +60,7 @@ BeginCmp
 TimeStamp = /54C97D24;
 Reference = P5;
 ValeurCmp = JACK;
-IdModule  = Connect:bornier3;
-EndCmp
-
-BeginCmp
-TimeStamp = /54E598A2;
-Reference = Q1;
-ValeurCmp = PSMN*R*;
-IdModule  = footprint:LFPAK-4;
-EndCmp
-
-BeginCmp
-TimeStamp = /54E5990B;
-Reference = Q2;
-ValeurCmp = PSMN*R*;
-IdModule  = footprint:LFPAK-4;
+IdModule  = Connect:bornier4;
 EndCmp
 
 BeginCmp
@@ -102,13 +81,6 @@ BeginCmp
 TimeStamp = /54B0F425;
 Reference = R3;
 ValeurCmp = 5K6;
-IdModule  = Resistors_SMD:R_0603;
-EndCmp
-
-BeginCmp
-TimeStamp = /54E5AF0B;
-Reference = R4;
-ValeurCmp = 10K;
 IdModule  = Resistors_SMD:R_0603;
 EndCmp
 
@@ -155,6 +127,20 @@ IdModule  = Resistors_SMD:R_0603;
 EndCmp
 
 BeginCmp
+TimeStamp = /5536EDCE;
+Reference = R12;
+ValeurCmp = 100K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /55374D90;
+Reference = R13;
+ValeurCmp = 10K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
 TimeStamp = /54B0FCF5;
 Reference = R18;
 ValeurCmp = 5K6;
@@ -197,10 +183,24 @@ IdModule  = footprint:SW_65_45;
 EndCmp
 
 BeginCmp
+TimeStamp = /55374818;
+Reference = T1;
+ValeurCmp = BSN20;
+IdModule  = Diodes_SMD:Diode_SOT23;
+EndCmp
+
+BeginCmp
+TimeStamp = /5537EABA;
+Reference = T2;
+ValeurCmp = IRF7476;
+IdModule  = SMD_Packages:SOIC-8-N;
+EndCmp
+
+BeginCmp
 TimeStamp = /54B5A089;
 Reference = T3;
 ValeurCmp = BSN20;
-IdModule  = SMD_Packages:SOT-23;
+IdModule  = Diodes_SMD:Diode_SOT23;
 EndCmp
 
 BeginCmp
@@ -208,13 +208,6 @@ TimeStamp = /54BBC0FA;
 Reference = U1;
 ValeurCmp = arduino_mini;
 IdModule  = arduino:arduino_mini;
-EndCmp
-
-BeginCmp
-TimeStamp = /54EB8B1F;
-Reference = U2;
-ValeurCmp = ROE-0505S;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x04;
 EndCmp
 
 EndListe
