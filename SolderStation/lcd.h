@@ -33,7 +33,7 @@ void lcd_set_contrast(byte contrast);
 /*
  * Print heat signal
  */
-void lcd_print_heat(boolean show);
+void lcd_print_heat(byte pwm);
 
 /*
  * Print iron temperature

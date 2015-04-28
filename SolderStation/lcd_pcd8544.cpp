@@ -48,7 +48,10 @@ static void __lcd_print_temperature(int temperature) {
   }
 
   display.print(temperature);
-  switch(get_temperature_unit()) {
+}
+
+static void __lcd_print_temperature_unit() {
+    switch(get_temperature_unit()) {
     case TEMP_FAHRENHEIT:
       display.print(DEGREE_SYM"F");
       break;
@@ -58,7 +61,6 @@ static void __lcd_print_temperature(int temperature) {
       break;
   }
 }
-
 
 static void center_for_text(uint16_t y, const char *text, byte size) {
   int len = strlen(text);
@@ -110,11 +112,11 @@ void lcd_clear() {
 /*
  * Print heat signal
  */
-void lcd_print_heat(boolean show) {
-  display.setTextSize(2);
+void lcd_print_heat(byte pwm) {
+  display.setTextSize(1);
   display.setTextColor(BLACK, WHITE);
-  const char* str = show? "****" : "    ";
-  center_for_text(34, str, 2);
+  display.setCursor(0, 0);
+  const char* str = my_sprintf("%3d%%", (byte)(((float)pwm) * 100.0f / 255.0f));
   display.print(str);
 }
 
@@ -122,10 +124,13 @@ void lcd_print_heat(boolean show) {
  * Print iron temperature
  */
 void lcd_print_iron_temperature(int temperature) {
-  display.setTextSize(2);
-  display.setCursor(15, 18);
+  display.setTextSize(4);
+  display.setCursor(0, 14);
   display.setTextColor(BLACK, WHITE);
   __lcd_print_temperature(temperature);
+  display.setTextSize(1);
+  right_for_text(14, "  ", 1);
+  __lcd_print_temperature_unit();
 }
 
 /*
@@ -136,6 +141,7 @@ void lcd_print_target_temperature(int temperature) {
   display.setCursor(54, 0);
   display.setTextColor(BLACK, WHITE);
   __lcd_print_temperature(temperature);
+  __lcd_print_temperature_unit();
 }
 
 /*
@@ -146,6 +152,7 @@ void lcd_print_standby_temperature(int temperature) {
   display.setCursor(54, 0);
   display.setTextColor(WHITE, BLACK);
   __lcd_print_temperature(temperature);
+  __lcd_print_temperature_unit();
 }
 
 /*
