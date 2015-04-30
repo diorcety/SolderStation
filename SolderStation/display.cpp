@@ -195,6 +195,7 @@ public:
 #ifdef LCD_SHOW_HEAT
     lcd_print_heat(get_iron_pwm());
 #endif //LCD_SHOW_HEAT
+    lcd_print_temperature_unit();
 #endif //LCD_MODULE
   }
 };

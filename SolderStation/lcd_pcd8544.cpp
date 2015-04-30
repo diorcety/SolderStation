@@ -62,13 +62,11 @@ static void __lcd_print_temperature_unit() {
   }
 }
 
-static void center_for_text(uint16_t y, const char *text, byte size) {
-  int len = strlen(text);
+static void center_for_text(uint16_t y, int len, byte size) {
   display.setCursor((display.width() - (FONT_WIDTH * size * len))/2, y);
 }
 
-static void right_for_text(uint16_t y, const char *text, byte size) {
-  int len = strlen(text);
+static void right_for_text(uint16_t y, int len, byte size) {
   display.setCursor((display.width() - (FONT_WIDTH * size * len)), y);
 }
 
@@ -125,12 +123,9 @@ void lcd_print_heat(byte pwm) {
  */
 void lcd_print_iron_temperature(int temperature) {
   display.setTextSize(4);
-  display.setCursor(0, 14);
+  center_for_text(10, 3, 4);
   display.setTextColor(BLACK, WHITE);
   __lcd_print_temperature(temperature);
-  display.setTextSize(1);
-  right_for_text(14, "  ", 1);
-  __lcd_print_temperature_unit();
 }
 
 /*
@@ -138,20 +133,27 @@ void lcd_print_iron_temperature(int temperature) {
  */
 void lcd_print_target_temperature(int temperature) {
   display.setTextSize(1);
-  display.setCursor(54, 0);
+  right_for_text(0, 3, 1);
   display.setTextColor(BLACK, WHITE);
   __lcd_print_temperature(temperature);
-  __lcd_print_temperature_unit();
 }
 
 /*
- * Print target temperature
+ * Print standby temperature
  */
 void lcd_print_standby_temperature(int temperature) {
   display.setTextSize(1);
-  display.setCursor(54, 0);
+  right_for_text(0, 3, 1);
   display.setTextColor(WHITE, BLACK);
   __lcd_print_temperature(temperature);
+}
+
+/*
+ * Print temperature unit
+ */
+void lcd_print_temperature_unit() {
+  display.setTextSize(1);
+  center_for_text(0, 2, 1);
   __lcd_print_temperature_unit();
 }
 
@@ -161,7 +163,7 @@ void lcd_print_standby_temperature(int temperature) {
 void lcd_print_title(const char *title) {
     display.setTextSize(1);
     display.setTextColor(BLACK, WHITE);
-    center_for_text(0, title, 1);
+    center_for_text(0, strlen(title), 1);
     display.print(title);
     display.drawLine(0, FONT_HEIGHT, display.width(), FONT_HEIGHT, BLACK);
 }
@@ -196,7 +198,7 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
         bg = WHITE;
       }
       display.setTextColor(c, bg);
-      right_for_text((FONT_HEIGHT + 2) + y, value, 1);
+      right_for_text((FONT_HEIGHT + 2) + y, strlen(value), 1);
       display.print(value);
     }
 }

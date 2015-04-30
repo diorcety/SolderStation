@@ -51,6 +51,11 @@ void lcd_print_target_temperature(int temperature);
 void lcd_print_standby_temperature(int temperature);
 
 /*
+ * Print temperature unit
+ */
+void lcd_print_temperature_unit();
+
+/*
  * Print title
  */
 void lcd_print_title(const char *title);
