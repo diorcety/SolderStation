@@ -31,7 +31,7 @@ void lcd_set_backlight(boolean enable);
 void lcd_set_contrast(byte contrast);
 
 /*
- * Print heat signal
+ * Print heat pwm
  */
 void lcd_print_heat(byte pwm);
 

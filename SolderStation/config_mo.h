@@ -33,6 +33,7 @@
 #define SEG7_SEL0_PIN 11
 #define SEG7_SEL1_PIN 10
 #define SEG7_SEL2_PIN 9
+#define SEG7_PWM_DOT
 
 // LED Module
 #define LED_MODULE

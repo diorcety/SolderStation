@@ -125,4 +125,8 @@ void seg7_print(int temp) {
   digitalWrite(SELS_PIN[current_sel], HIGH);
 }
 
+void seg7_print_heat(byte pwm) {
+  digitalWrite(SEG7_DP_PIN, pwm >= (64*(current_sel + 1)));
+}
+
 #endif //SEG7_MODULE

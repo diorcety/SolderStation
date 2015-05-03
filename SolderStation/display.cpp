@@ -190,6 +190,11 @@ public:
       }
 #endif //SEG7_MODULE
     }
+#ifdef SEG7_MODULE
+#ifdef SEG7_PWM_DOT
+    seg7_print_heat(get_iron_pwm());
+#endif //SEG7_PWM_DOT
+#endif //SEG7_MODULE
 #ifdef LCD_MODULE
     lcd_print_iron_temperature(get_iron_temperature());
 #ifdef LCD_SHOW_HEAT
