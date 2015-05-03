@@ -20,8 +20,8 @@ struct _memory_settings {
   byte lcd_contrast;
   byte language;
   temperature_unit tu;
-  unsigned long checksum;
 #endif //LCD_MODULE
+  unsigned long checksum;
 } settings = {
   300,
   150,
