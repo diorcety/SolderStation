@@ -1,6 +1,11 @@
 #ifndef _CONFIG_XXX_H
 #define _CONFIG_XXX_H
 
+#ifdef CONFIG_NAME
+#error Configuration already defined
+#endif
+#define CONFIG_NAME XXX
+
 // Iron pins
 #define PIN_PWM_OUT 3
 #define PIN_PROBE_IN A0
@@ -48,5 +53,7 @@
 // Serial Module
 #define SERIAL_MODULE
 #define SERIAL_BAUD 115200
+
+#define HEAT_PROTECTION
 
 #endif //_CONFIG_XXX_H

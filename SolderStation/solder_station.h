@@ -22,6 +22,10 @@ int get_iron_temperature();
 
 void set_iron_temperature(int tTmp);
 
+void set_fault_mode();
+
+bool is_fault_mode();
+
 int get_iron_pwm();
 
 void set_iron_pwm(int pwm);
@@ -57,6 +61,18 @@ temperature_unit get_temperature_unit();
 void set_temperature_unit(temperature_unit ts);
 
 #endif //LCD_MODULE
+
+#ifdef HEAT_PROTECTION
+
+byte get_protection_pwm();
+
+void set_protection_pwm(byte pwm);
+
+int get_protection_time();
+
+void set_protection_time(int time);
+
+#endif //HEAT_PROTECTION
 
 /*
  * Load settings from the memory

@@ -60,6 +60,11 @@ void lcd_print_temperature_unit();
  */
 void lcd_print_title(const char *title);
 
+/*
+ * Print fault
+ */
+void lcd_print_fault();
+
 typedef enum {
   ITEM_NONE,
   ITEM_SELECTED,

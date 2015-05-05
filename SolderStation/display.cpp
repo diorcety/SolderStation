@@ -167,6 +167,15 @@ public:
   }
   
   virtual void draw() {
+    if(is_fault_mode()) {
+#ifdef SEG7_MODULE
+      seg7_print_fault();
+#endif //SEG7_MODULE
+#ifdef LCD_MODULE
+      lcd_print_fault();
+#endif //LCD_MODULE
+      return;
+    }
     if(!get_standby_mode()) {
 #ifdef LCD_MODULE
       lcd_print_target_temperature(get_target_temperature());
@@ -405,6 +414,10 @@ private:
   typedef enum {
     TARGET_TEMPERATURE = 0,
     STANDBY_TEMPERATURE,
+#ifdef HEAT_PROTECTION
+    PROTECTION_PWM,
+    PROTECTION_TIME,
+#endif //HEAT_PROTECTION
     MAX
   } Item;
   static item_entry menu_items[MAX];
@@ -426,6 +439,26 @@ private:
     ::set_standby_temperature(::get_standby_temperature() + TEMP_STEP*inc);
     return true;
   }
+  
+  static const char* get_protection_pwm() {
+    return my_sprintf("%d", (byte)((float)::get_protection_pwm() / 255.0f * 100.0f));
+  }
+  
+  static boolean set_protection_pwm(int inc) {
+    byte percent = (byte)((float)::get_protection_pwm() / 255.0f * 100.0f);
+    percent += inc;
+    ::set_protection_pwm((byte)((float)percent / 100.0f * 255.0f));
+    return true;
+  }
+  
+  static const char* get_protection_time() {
+    return my_sprintf("%d", ::get_protection_time());
+  }
+  
+  static boolean set_protection_time(int inc) {
+    ::set_protection_time(::get_protection_time() + (1 * inc));
+    return true;
+  }
 public:
   IronMenuScreen(): AbstractEditMenuScreen(TT(MENU_IRON_TITLE), SCREEN_MENU_MAIN, menu_items, MAX) {
   }
@@ -436,6 +469,10 @@ public:
 item_entry IronMenuScreen::menu_items[IronMenuScreen::MAX] = {
   {TT(MENU_IRON_TARGET_TEMPERATURE), get_target_temperature, set_target_temperature},
   {TT(MENU_IRON_STANDBY_TEMPERATURE), get_standby_temperature, set_standby_temperature},
+#ifdef HEAT_PROTECTION
+  {TT(MENU_IRON_PROTECTION_PWM), get_protection_pwm, set_protection_pwm},
+  {TT(MENU_IRON_PROTECTION_TIME), get_protection_time, set_protection_time},
+#endif //HEAT_PROTECTION
 };
 
 

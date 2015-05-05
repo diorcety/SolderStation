@@ -7,6 +7,7 @@
 #include "lang.h"
 
 static int iron_temperature = 0;
+static bool fault_mode = false;
 static byte iron_pwm = 0;
 static boolean standby_mode = false;
 
@@ -21,6 +22,10 @@ struct _memory_settings {
   byte language;
   temperature_unit tu;
 #endif //LCD_MODULE
+#ifdef HEAT_PROTECTION
+  byte protection_pwm;
+  byte protection_time;
+#endif //HEAT_PROTECTION
   unsigned long checksum;
 } settings = {
   300,
@@ -31,6 +36,10 @@ struct _memory_settings {
   0,
   TEMP_CELSIUS,
 #endif //LCD_MODULE
+#ifdef HEAT_PROTECTION
+  85, // 33%
+  15, // 15 seconds
+#endif //HEAT_PROTECTION
   CHECKSUM_VALUE
 };
 
@@ -79,6 +88,13 @@ void set_iron_pwm(int pwm) {
   iron_pwm = pwm > 255 ? 255 : (pwm < 0 ? 0 : pwm);
 }
 
+void set_fault_mode() {
+  fault_mode = true;
+}
+
+bool is_fault_mode() {
+  return fault_mode;
+}
 
 #ifdef LCD_MODULE
 
@@ -118,6 +134,26 @@ void set_temperature_unit(temperature_unit tu) {
 }
 
 #endif //LCD_MODULE
+
+#ifdef HEAT_PROTECTION
+
+byte get_protection_pwm() {
+  return settings.protection_pwm;
+}
+
+void set_protection_pwm(byte pwm) {
+  settings.protection_pwm = pwm;
+}
+
+int get_protection_time() {
+  return settings.protection_time;
+}
+
+void set_protection_time(int time) {
+  settings.protection_time = time;
+}
+
+#endif //HEAT_PROTECTION
 
 /*
  * Load settings from the memory

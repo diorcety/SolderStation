@@ -105,23 +105,39 @@ static void print_digit(byte digit) {
 
 
 static byte current_sel = 2;
+
+static void seg7_move() {
+  current_sel = (current_sel + 1) % 3;
+}
+
 /*
  * Print temperature on 7-seg
  */
 void seg7_print(int temp) {
   digitalWrite(SELS_PIN[current_sel], LOW);
+
+  seg7_move();
+  
   int div = 1;
-  if(current_sel == 2) {
-    current_sel = 0;
+  if(current_sel == 0) {
     div = 100;
-  } else if(current_sel == 0) {
-    current_sel = 1;
+  } else if(current_sel == 1) {
     div = 10;
   } else {
-    current_sel = 2;
     div = 1;
   }
   print_digit((temp/div)%10);
+  digitalWrite(SELS_PIN[current_sel], HIGH);
+}
+
+void seg7_print_fault() {
+  digitalWrite(SELS_PIN[current_sel], LOW);
+  
+  seg7_move();
+  
+  for(byte i = 0; i < 8; i++) {
+    digitalWrite(SEG_PIN[i], i < 7);
+  }
   digitalWrite(SELS_PIN[current_sel], HIGH);
 }
 

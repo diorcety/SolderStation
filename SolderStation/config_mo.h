@@ -1,5 +1,10 @@
-#ifndef _CONFIG_DC3MKB_H
-#define _CONFIG_DC3MKB_H
+#ifndef _CONFIG_MO_H
+#define _CONFIG_MO_H
+
+#ifdef CONFIG_NAME
+#error Configuration already defined
+#endif
+#define CONFIG_NAME MO
 
 // Iron pins
 #define PIN_PWM_OUT 3
@@ -44,8 +49,10 @@
 #define SERIAL_MODULE
 #define SERIAL_BAUD 115200
 
-// Override UI loop
+// Override UI loop -> LED
 #undef DELAY_UI_LOOP
 #define DELAY_UI_LOOP 5
+
+#define HEAT_PROTECTION
 
 #endif //_CONFIG_DC3MKB_H

@@ -36,6 +36,11 @@ int compute_iron_pwm(int actual_temperature, int target_temperature) {
 }
 
 void update_iron_temperature() {
+   if(is_fault_mode()) {
+       DEBUG_LOG_LN("FAULT");
+       set_iron_pwm(0);
+       return;
+   }
    int iron_temperature = get_iron_temperature();
    DEBUG_LOG("Iron Temp.=");
    DEBUG_LOG_LN(iron_temperature);
@@ -70,6 +75,18 @@ void update_iron() {
     set_iron_temperature(iron_temperature);
     update_iron_temperature();
   }
+  
+#ifdef HEAT_PROTECTION
+  static unsigned int power_milli = 0;
+  if(get_iron_pwm() >= get_protection_pwm()) {
+    power_milli += DELAY_MAIN_LOOP;
+  } else {
+    power_milli = 0;
+  }
+  if(power_milli >= (get_protection_time() * 1000)) {
+    set_fault_mode();
+  }
+#endif
 }
 
 /*

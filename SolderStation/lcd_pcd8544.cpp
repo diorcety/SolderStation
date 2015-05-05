@@ -1,6 +1,7 @@
 #include "config.h"
 #include "lcd.h"
 #include "utils.h"
+#include "lang.h"
 
 #include <SPI.h>
 #include <Arduino.h>
@@ -155,6 +156,17 @@ void lcd_print_temperature_unit() {
   display.setTextSize(1);
   center_for_text(0, 2, 1);
   __lcd_print_temperature_unit();
+}
+
+/*
+ * Print fault
+ */
+void lcd_print_fault() {
+  lcd_clear();
+  const char *msg = GET_TEXT(TT(T_FAULT));
+  display.setTextSize(2);
+  center_for_text((display.height()-FONT_HEIGHT*2)/2, strlen(msg), 2);
+  display.print(msg);
 }
 
 /*

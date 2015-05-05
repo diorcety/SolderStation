@@ -21,6 +21,11 @@ void seg7_print(int temp);
  */
 void seg7_print_heat(byte pwm);
 
+/*
+ * Print fault
+ */
+void seg7_print_fault();
+
 #endif //SEG7_MODULE
 
 #endif //_SEG7_H
