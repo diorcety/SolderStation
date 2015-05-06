@@ -110,7 +110,6 @@ private:
   
 public:
   MainScreen() {
-            DEBUG_LOG_LN("MainScreen");
     last_edit_time = 0;
   }
 
