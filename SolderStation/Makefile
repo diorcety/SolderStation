@@ -1,6 +1,7 @@
 ### BOARD_TAG
 ### It must be set to the board you are currently using. (i.e uno, mega2560, etc.)
-BOARD_TAG = nano328
+BOARD_TAG = nano
+BOARD_SUB = atmega328
 
 OPTIMIZATION_LEVEL = s
 
