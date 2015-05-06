@@ -1,11 +1,6 @@
 #ifndef _CONFIG_MO_H
 #define _CONFIG_MO_H
 
-#ifdef CONFIG_NAME
-#error Configuration already defined
-#endif
-#define CONFIG_NAME MO
-
 // Iron pins
 #define PIN_PWM_OUT 3
 #define PIN_PROBE_IN A7

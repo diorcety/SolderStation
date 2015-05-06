@@ -1,11 +1,6 @@
 #ifndef _CONFIG_DC3MKB_H
 #define _CONFIG_DC3MKB_H
 
-#ifdef CONFIG_NAME
-#error Configuration already defined
-#endif
-#define CONFIG_NAME DC3MKB
-
 // Iron pins
 #define PIN_PWM_OUT 3
 #define PIN_PROBE_IN A0
