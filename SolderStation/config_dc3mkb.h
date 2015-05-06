@@ -25,10 +25,10 @@
 #define SEG7_B_PIN 7
 #define SEG7_C_PIN 8
 #define SEG7_D_PIN 5
-#define SEG7_E_PIN 18
+#define SEG7_E_PIN A4
 #define SEG7_F_PIN 2
 #define SEG7_G_PIN 4
-#define SEG7_DP_PIN 19
+#define SEG7_DP_PIN A5
 #define SEG7_SEL0_PIN 11
 #define SEG7_SEL1_PIN 10
 #define SEG7_SEL2_PIN 9
