@@ -600,7 +600,7 @@ void display_update() {
     // Update screen
     view->update();
     if(do_redraw) {
-      DEBUG_LOG_LN("Draw!");
+      //DEBUG_LOG_LN("Draw!");
       view->draw();
 #ifdef LCD_MODULE
       lcd_display();
