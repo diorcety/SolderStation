@@ -95,14 +95,20 @@ static byte DIGITS[10] = {
   SET_STATE(1, A) | SET_STATE(1, B) | SET_STATE(1, C) | SET_STATE(1, D) | SET_STATE(1, F) | SET_STATE(1, G),                   // 9
 };
 
-static void print_digit(byte digit) {
-  byte digit_value = DIGITS[digit];
+static byte LETTER_E = SET_STATE(1, A) | SET_STATE(1, D) | SET_STATE(1, E) | SET_STATE(1, F) | SET_STATE(1, G);
+static byte LETTER_R = SET_STATE(1, E) | SET_STATE(1, G);
+
+static void print_value(byte digit_value) {
   for(byte i = 0; i < 8; i++) {
     digitalWrite(SEG_PIN[i], digit_value & 0x1);
     digit_value = digit_value >> 1;
   }
 }
 
+static void print_digit(byte digit) {
+  byte digit_value = DIGITS[digit];
+  print_value(digit_value);
+}
 
 static byte current_sel = 2;
 
@@ -135,9 +141,18 @@ void seg7_print_fault() {
   
   seg7_move();
   
-  for(byte i = 0; i < 8; i++) {
-    digitalWrite(SEG_PIN[i], i < 7);
+  byte value = 0;
+  
+  if(current_sel == 0) {
+    value = LETTER_E;
+  } else if(current_sel == 1) {
+    value = LETTER_R;
+  } else {
+    value = LETTER_R;
   }
+  
+  print_value(value);
+  
   digitalWrite(SELS_PIN[current_sel], HIGH);
 }
 
