@@ -161,6 +161,7 @@ void set_protection_time(int time) {
 void load_settings() {
   DEBUG_LOG_LN("Load settings");
   
+#ifdef MEMORY_SETTINGS
   unsigned long checksum;
   memory_load_settings(sizeof(settings) - sizeof(unsigned long), &checksum, sizeof(unsigned long));
   
@@ -170,7 +171,8 @@ void load_settings() {
   } else {
     DEBUG_LOG_LN("Memory is incorrect. Using default values");
   }
-  
+#endif //MEMORY_SETTINGS
+
   DEBUG_LOG_LN(my_sprintf("Target temperature: %d", settings.target_temperature));
   DEBUG_LOG_LN(my_sprintf("Standby temperature: %d", settings.standby_temperature));
 #ifdef LCD_MODULE
@@ -186,7 +188,9 @@ void load_settings() {
  */
 void save_settings() {
   DEBUG_LOG_LN("Save settings");
+#ifdef MEMORY_SETTINGS
   memory_save_settings(0, &settings, sizeof(settings));
+#endif //MEMORY_SETTINGS
 }
 
 void update_settings() {

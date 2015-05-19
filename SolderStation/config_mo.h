@@ -49,5 +49,6 @@
 #define DELAY_UI_LOOP 5
 
 #define HEAT_PROTECTION
+#define MEMORY_SETTINGS
 
 #endif //_CONFIG_DC3MKB_H

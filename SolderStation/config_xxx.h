@@ -50,5 +50,6 @@
 #define SERIAL_BAUD 115200
 
 #define HEAT_PROTECTION
+#define MEMORY_SETTINGS
 
 #endif //_CONFIG_XXX_H

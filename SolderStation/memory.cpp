@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+#ifdef MEMORY_SETTINGS
+
 /*
  * Save the settings
  */
@@ -22,3 +24,5 @@ void memory_load_settings(int offset, void *settings, unsigned int size) {
     for (i = 0; i < size; i++)
           *p++ = EEPROM.read(offset++);
 }
+
+#endif //MEMORY_SETTINGS

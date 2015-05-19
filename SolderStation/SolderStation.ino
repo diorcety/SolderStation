@@ -112,13 +112,20 @@ void setup() {
   controls_init();
   display_init();
    
+
+#ifdef MEMORY_SETTINGS
+#ifndef ROTATING_UP_DOWN
   // Check if we load default settings or not
   if(!(digitalRead(BUTTON_UP_PIN)^BUTTON_UP_INVERTED) || !(digitalRead(BUTTON_DOWN_PIN)^BUTTON_DOWN_INVERTED)) {
+#endif //ROTATING_UP_DOWN
     // Load settings
     load_settings();
+#ifndef ROTATING_UP_DOWN
   } else {
     DEBUG_LOG_LN("Load default settings");
   }
+#endif //ROTATING_UP_DOWN
+#endif //MEMORY_SETTINGS
   
   // Init timers
   uiTimer.setInterval(DELAY_UI_LOOP, display_update);
