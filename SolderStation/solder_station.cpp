@@ -181,6 +181,10 @@ void load_settings() {
   DEBUG_LOG_LN(my_sprintf("Language: %d", settings.language));
   DEBUG_LOG_LN(my_sprintf("Temperature Unit: %d", settings.tu));
 #endif //LCD_MODULE
+#ifdef HEAT_PROTECTION
+  DEBUG_LOG_LN(my_sprintf("Protection PWM: %d", settings.protection_pwm));
+  DEBUG_LOG_LN(my_sprintf("Protection Time: %d", settings.protection_time));
+#endif //HEAT_PROTECTION
 }
 
 /*
