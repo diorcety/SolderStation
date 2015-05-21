@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 22/04/2015 20:17:14
+Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 21/05/2015 20:43:52
 
 BeginCmp
 TimeStamp = /54B0F663;
@@ -18,7 +18,7 @@ BeginCmp
 TimeStamp = /54B59B66;
 Reference = D1;
 ValeurCmp = LED;
-IdModule  = LEDs:LED-0805;
+IdModule  = LEDs:LED-5MM;
 EndCmp
 
 BeginCmp
@@ -53,7 +53,7 @@ BeginCmp
 TimeStamp = /54B58CE8;
 Reference = P4;
 ValeurCmp = KEYPAD;
-IdModule  = Pin_Headers:Pin_Header_Straight_1x07;
+IdModule  = footprint:SMT1x7;
 EndCmp
 
 BeginCmp
