@@ -78,7 +78,9 @@ void update_iron_temperature() {
 
 SimpleTimer uiTimer; // UI timer
 SimpleTimer ironTimer; // Iron timer
+#if 0 // Not really usefull for the moment
 SimpleTimer settingsTimer; // Settings timer
+#endif
 SimpleTimer saveTimer; // Save timer
 
 void update_iron() {
@@ -194,6 +196,8 @@ void setup() {
 void loop() {
   uiTimer.run(); 
   ironTimer.run();
+#if 0 // Not really usefull for the moment
   settingsTimer.run();
+#endif
   saveTimer.run();
 }
