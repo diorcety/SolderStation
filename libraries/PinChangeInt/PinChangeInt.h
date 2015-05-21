@@ -129,8 +129,6 @@ Copyright 2010-2014 Michael Schwager (aka, "GreyGnome")
 #include <new.h>
 #include <wiring_private.h> // cbi and sbi defined here
 
-#undef DEBUG
-
 /*
 * Theory: For the IO pins covered by Pin Change Interrupts
 * (== all of them on the Atmega168/328, and a subset on the Atmega2560),
@@ -460,7 +458,7 @@ int8_t PCintPort::addPin(uint8_t arduinoPin, PCIntvoidFuncPtr userFunc, uint8_t 
 	if (firstPin == NULL) firstPin=p;
 	else tmp->next=p; // NOTE that tmp cannot be NULL.
 
-#ifdef DEBUG
+#ifdef PCI_DEBUG
 	Serial.print("addPin. pin given: "); Serial.print(arduinoPin, DEC);
 	int addr = (int) p;
 	Serial.print(" instance addr: "); Serial.println(addr, HEX);
@@ -468,7 +466,7 @@ int8_t PCintPort::addPin(uint8_t arduinoPin, PCIntvoidFuncPtr userFunc, uint8_t 
 #endif
 
 	enable(p, userFunc, mode);
-#ifdef DEBUG
+#ifdef PCI_DEBUG
 	Serial.print("addPin. pin given: "); Serial.print(arduinoPin, DEC), Serial.print (" pin stored: ");
 	int addr = (int) p;
 	Serial.print(" instance addr: "); Serial.println(addr, HEX);
@@ -493,7 +491,7 @@ int8_t PCintPort::attachInterrupt(uint8_t arduinoPin, PCIntvoidFuncPtr userFunc,
 	// Added by GreyGnome... must set the initial value of lastPinView for it to be correct on the 1st interrupt.
 	// ...but even then, how do you define "correct"?  Ultimately, the user must specify (not provisioned for yet).
 	port->lastPinView=port->portInputReg;
-#ifdef DEBUG
+#ifdef PCI_DEBUG
 	Serial.print("attachInterrupt- pin: "); Serial.println(arduinoPin, DEC);
 #endif
 	// map pin to PCIR register
