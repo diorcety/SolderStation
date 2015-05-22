@@ -1,9 +1,16 @@
-Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 21/05/2015 20:43:52
+Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 22/05/2015 20:28:42
 
 BeginCmp
 TimeStamp = /54B0F663;
 Reference = C1;
 ValeurCmp = 10nF;
+IdModule  = Capacitors_SMD:C_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /555F6CC1;
+Reference = C2;
+ValeurCmp = 100nF;
 IdModule  = Capacitors_SMD:C_0603;
 EndCmp
 
@@ -85,6 +92,20 @@ IdModule  = Resistors_SMD:R_0603;
 EndCmp
 
 BeginCmp
+TimeStamp = /55374D90;
+Reference = R4;
+ValeurCmp = 10K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /555FA70B;
+Reference = R5;
+ValeurCmp = 1K;
+IdModule  = Resistors_SMD:R_0603;
+EndCmp
+
+BeginCmp
 TimeStamp = /54B5A476;
 Reference = R6;
 ValeurCmp = 220R;
@@ -134,13 +155,6 @@ IdModule  = Resistors_SMD:R_0603;
 EndCmp
 
 BeginCmp
-TimeStamp = /55374D90;
-Reference = R13;
-ValeurCmp = 10K;
-IdModule  = Resistors_SMD:R_0603;
-EndCmp
-
-BeginCmp
 TimeStamp = /54B0FCF5;
 Reference = R18;
 ValeurCmp = 5K6;
@@ -183,17 +197,17 @@ IdModule  = footprint:SW_65_45;
 EndCmp
 
 BeginCmp
-TimeStamp = /55374818;
+TimeStamp = /5537EABA;
 Reference = T1;
-ValeurCmp = BSN20;
-IdModule  = Diodes_SMD:Diode_SOT23;
+ValeurCmp = IRF7476;
+IdModule  = SMD_Packages:SOIC-8-N;
 EndCmp
 
 BeginCmp
-TimeStamp = /5537EABA;
+TimeStamp = /55374818;
 Reference = T2;
-ValeurCmp = IRF7476;
-IdModule  = SMD_Packages:SOIC-8-N;
+ValeurCmp = BSN20;
+IdModule  = Diodes_SMD:Diode_SOT23;
 EndCmp
 
 BeginCmp
