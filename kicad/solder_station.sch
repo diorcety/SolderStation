@@ -72,6 +72,7 @@ LIBS:transf
 LIBS:ttl_ieee
 LIBS:video
 LIBS:irf7476
+LIBS:enc
 LIBS:solder_station-cache
 EELAYER 25 0
 EELAYER END
@@ -627,8 +628,6 @@ Wire Wire Line
 	7350 3550 7350 4650
 Connection ~ 7350 4650
 Wire Wire Line
-	6550 3650 7800 3650
-Wire Wire Line
 	6950 3650 6950 3850
 Wire Wire Line
 	6550 3350 7800 3350
@@ -896,4 +895,30 @@ Wire Wire Line
 	2950 5950 2900 5950
 Wire Wire Line
 	2550 5950 2600 5950
+$Comp
+L ENC SW5
+U 1 1 5560728B
+P 6900 3500
+F 0 "SW5" H 6900 3250 60  0000 C CNN
+F 1 "ENC" H 6900 3700 60  0000 C CNN
+F 2 "footprint:encoder_alps-ec12d" H 6900 3500 60  0001 C CNN
+F 3 "" H 6900 3500 60  0000 C CNN
+	1    6900 3500
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 3500
+Wire Wire Line
+	6600 3450 6700 3450
+Wire Wire Line
+	6550 3650 7800 3650
+Wire Wire Line
+	6700 3550 6650 3550
+Wire Wire Line
+	6650 3550 6650 3350
+Connection ~ 6650 3350
+Wire Wire Line
+	6600 3450 6600 3650
+Connection ~ 6600 3650
+Wire Wire Line
+	6700 3500 5450 3500
 $EndSCHEMATC

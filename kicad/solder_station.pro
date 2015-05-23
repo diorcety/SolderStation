@@ -1,4 +1,4 @@
-update=22/04/2015 20:12:22
+update=23/05/2015 13:31:14
 version=1
 last_client=kicad
 [cvpcb]
@@ -135,3 +135,4 @@ LibName70=transf
 LibName71=ttl_ieee
 LibName72=video
 LibName73=library/irf7476
+LibName74=library/enc
