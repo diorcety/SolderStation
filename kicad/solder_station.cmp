@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 23/05/2015 21:13:32
+Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 23/05/2015 22:55:52
 
 BeginCmp
 TimeStamp = /54B0F663;
@@ -172,28 +172,28 @@ BeginCmp
 TimeStamp = /54B589BD;
 Reference = SW1;
 ValeurCmp = SPST;
-IdModule  = footprint:SW_65_45;
+IdModule  = footprint:SW_125_50;
 EndCmp
 
 BeginCmp
 TimeStamp = /54B58A5E;
 Reference = SW2;
 ValeurCmp = SPST;
-IdModule  = footprint:SW_65_45;
+IdModule  = footprint:SW_125_50;
 EndCmp
 
 BeginCmp
 TimeStamp = /54B58AB3;
 Reference = SW3;
 ValeurCmp = SPST;
-IdModule  = footprint:SW_65_45;
+IdModule  = footprint:SW_125_50;
 EndCmp
 
 BeginCmp
 TimeStamp = /54B58AE8;
 Reference = SW4;
 ValeurCmp = SPST;
-IdModule  = footprint:SW_65_45;
+IdModule  = footprint:SW_125_50;
 EndCmp
 
 BeginCmp
