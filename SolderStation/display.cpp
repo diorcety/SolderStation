@@ -439,6 +439,7 @@ private:
     return true;
   }
   
+#ifdef HEAT_PROTECTION
   static const char* get_protection_pwm() {
     return my_sprintf("%d", (byte)((float)::get_protection_pwm() / 255.0f * 100.0f));
   }
@@ -458,6 +459,7 @@ private:
     ::set_protection_time(::get_protection_time() + (1 * inc));
     return true;
   }
+#endif //HEAT_PROTECTION
 public:
   IronMenuScreen(): AbstractEditMenuScreen(TT(MENU_IRON_TITLE), SCREEN_MENU_MAIN, menu_items, MAX) {
   }
@@ -575,7 +577,7 @@ static void change_view() {
  * Init display stuff
  */
 void display_init() {
-  DEBUG_LOG_LN("Init Display");
+  DEBUG_LOG_LN(DEBUG_STR("Init Display"));
   change_screen(SCREEN_MAIN);
 }
 
@@ -599,7 +601,7 @@ void display_update() {
     // Update screen
     view->update();
     if(do_redraw) {
-      //DEBUG_LOG_LN("Draw!");
+      //DEBUG_LOG_LN(DEBUG_STR("Draw!"));
       view->draw();
 #ifdef LCD_MODULE
       lcd_display();

@@ -23,7 +23,7 @@
  * Init iron stuff
  */
 void iron_init() {
-  DEBUG_LOG_LN("Init Iron");
+  DEBUG_LOG_LN(DEBUG_STR("Init Iron"));
   //set pin directions:
   pinMode(PIN_PWM_OUT, OUTPUT);
   pinMode(PIN_PROBE_IN, INPUT);

@@ -7,6 +7,8 @@
 
 // Controls
 #define BUTTON_EXTENDED
+#define ROTATING_UP_DOWN
+#define ROTATING_UP_DOWN_DIVIDER 4
 #define BUTTON_UP_PIN 7
 #define BUTTON_UP_PULL 1
 #define BUTTON_UP_INVERTED 1

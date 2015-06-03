@@ -75,7 +75,7 @@ static void right_for_text(uint16_t y, int len, byte size) {
  * Init LCD stuff
  */
 void lcd_init() {
-  DEBUG_LOG_LN("Init LCD PCD8544");
+  DEBUG_LOG_LN(DEBUG_STR("Init LCD PCD8544"));
   display.begin();
   display.setContrast(30);
   display.clearDisplay();

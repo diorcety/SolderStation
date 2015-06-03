@@ -9,6 +9,12 @@
 #endif //ROTATING_UP_DOWN
 
 
+#ifdef ROTATING_UP_DOWN
+#ifndef ROTATING_UP_DOWN_DIVIDER
+#error Missing configuration of ROTATING_UP_DOWN_DIVIDER
+#endif //ROTATING_UP_DOWN_DIVIDER
+#endif //ROTATING_UP_DOWN
+
 #ifndef BUTTON_UP_PIN
 #error Missing configuration of BUTTON_UP_PIN
 #endif //BUTTON_UP_PIN
@@ -187,8 +193,8 @@ public:
     return minus;
   }
   
-  void resetValue() {
-    value = 0;
+  void setValue(int value) {
+    this->value = value;
   }
   
   int getValue() {
@@ -229,19 +235,20 @@ public:
   virtual int getValue()  {
     bool plus = rotating_device->getPlusControl() == i;
     int value = rotating_device->getValue();
-    if(plus && value > 0) {
-      rotating_device->resetValue();
-      return value;
+    int step = value / ROTATING_UP_DOWN_DIVIDER;
+    if(plus && step > 0) {
+      rotating_device->setValue(0);
+      return step;
     }
-    if(!plus && value < 0) {
-      rotating_device->resetValue();
-      return -value;
+    if(!plus && step < 0) {
+      rotating_device->setValue(0);
+      return -step;
     }
     return 0;
   }
   
   virtual void acknowledge() {
-    rotating_device->resetValue();
+    rotating_device->setValue(0);
   }
   
   ~RotatingControl() {
@@ -264,7 +271,7 @@ inline void *operator new(size_t, void *buf) { return buf; }
  * Init controls stuff
  */
 void controls_init() {
-  DEBUG_LOG_LN("Init Controls");
+  DEBUG_LOG_LN(DEBUG_STR("Init Controls"));
 #ifdef ROTATING_UP_DOWN
   upDownRotationDevice.init();
 #endif //ROTATION_UP_DOWN

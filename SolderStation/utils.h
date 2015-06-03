@@ -9,9 +9,11 @@ void setPwmFrequency(int pin, int divisor);
 const char * my_sprintf(const char *format, ...);
 
 #if defined(SERIAL_MODULE) && defined(SERIAL_DEBUG)
-#define DEBUG_LOG(x) Serial.print(x)
-#define DEBUG_LOG_LN(x) Serial.println(x)
+#define DEBUG_STR(x) F(x)
+#define DEBUG_LOG(x...) Serial.print(x)
+#define DEBUG_LOG_LN(x...) Serial.println(x)
 #else
+#define DEBUG_STR(x) x
 #define DEBUG_LOG(x)
 #define DEBUG_LOG_LN(x)
 #endif

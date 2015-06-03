@@ -159,31 +159,39 @@ void set_protection_time(int time) {
  * Load settings from the memory
  */
 void load_settings() {
-  DEBUG_LOG_LN("Load settings");
+  DEBUG_LOG_LN(DEBUG_STR("Load settings"));
   
 #ifdef MEMORY_SETTINGS
   unsigned long checksum;
   memory_load_settings(sizeof(settings) - sizeof(unsigned long), &checksum, sizeof(unsigned long));
   
   if(checksum == CHECKSUM_VALUE) {
-    DEBUG_LOG_LN("Load from memory");
+    DEBUG_LOG_LN(DEBUG_STR("Load from memory"));
     memory_load_settings(0, &settings, sizeof(settings) - sizeof(unsigned long));
   } else {
-    DEBUG_LOG_LN("Memory is incorrect. Using default values");
+    DEBUG_LOG_LN(DEBUG_STR("Memory is incorrect. Using default values"));
   }
 #endif //MEMORY_SETTINGS
 
-  DEBUG_LOG_LN(my_sprintf("Target temperature: %d", settings.target_temperature));
-  DEBUG_LOG_LN(my_sprintf("Standby temperature: %d", settings.standby_temperature));
+  DEBUG_LOG(DEBUG_STR("Target temperature: "));
+  DEBUG_LOG_LN(settings.target_temperature);
+  DEBUG_LOG(DEBUG_STR("Standby temperature: "));
+  DEBUG_LOG_LN(settings.standby_temperature);
 #ifdef LCD_MODULE
-  DEBUG_LOG_LN(my_sprintf("LCD backlight: %d", settings.lcd_backlight_mode));
-  DEBUG_LOG_LN(my_sprintf("LCD Contrast: %d", settings.lcd_contrast));
-  DEBUG_LOG_LN(my_sprintf("Language: %d", settings.language));
-  DEBUG_LOG_LN(my_sprintf("Temperature Unit: %d", settings.tu));
+  DEBUG_LOG(DEBUG_STR("LCD backlight: "));
+  DEBUG_LOG_LN(settings.lcd_backlight_mode);
+  DEBUG_LOG(DEBUG_STR("LCD Contrast: "));
+  DEBUG_LOG_LN(settings.lcd_contrast);
+  DEBUG_LOG(DEBUG_STR("Language: "));
+  DEBUG_LOG_LN(settings.language);
+  DEBUG_LOG(DEBUG_STR("Temperature Unit: "));
+  DEBUG_LOG_LN(settings.tu);
 #endif //LCD_MODULE
 #ifdef HEAT_PROTECTION
-  DEBUG_LOG_LN(my_sprintf("Protection PWM: %d", settings.protection_pwm));
-  DEBUG_LOG_LN(my_sprintf("Protection Time: %d", settings.protection_time));
+  DEBUG_LOG(DEBUG_STR("Protection PWM: "));
+  DEBUG_LOG_LN(settings.protection_pwm);
+  DEBUG_LOG(DEBUG_STR("Protection Time: "));
+  DEBUG_LOG_LN(settings.protection_time);
 #endif //HEAT_PROTECTION
 }
 
@@ -191,7 +199,7 @@ void load_settings() {
  * Save settings to the memory
  */
 void save_settings() {
-  DEBUG_LOG_LN("Save settings");
+  DEBUG_LOG_LN(DEBUG_STR("Save settings"));
 #ifdef MEMORY_SETTINGS
   memory_save_settings(0, &settings, sizeof(settings));
 #endif //MEMORY_SETTINGS

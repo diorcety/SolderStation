@@ -16,7 +16,7 @@
  * Init LED stuff
  */
 void led_init() {
-  DEBUG_LOG_LN("Init LED");
+  DEBUG_LOG_LN(DEBUG_STR("Init LED"));
   // Switch off the LED
   digitalWrite(LED_HEAT, LED_HEAT_INVERTED^LOW); 
   pinMode(LED_HEAT, OUTPUT);

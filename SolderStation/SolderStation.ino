@@ -56,20 +56,20 @@ void update_iron_temperature() {
   if(last_debug_log + 1000 <= current_check) {
     last_debug_log = current_check;
     if(is_fault_mode()) {
-      DEBUG_LOG_LN("FAULT");
+      DEBUG_LOG_LN(DEBUG_STR("FAULT"));
     } else {
-      DEBUG_LOG("Iron Temp.=");
+      DEBUG_LOG(DEBUG_STR("Iron Temp.="));
       DEBUG_LOG_LN(get_iron_temperature());
       int temperature;
       if(get_standby_mode()) {
-        DEBUG_LOG("Standby Temp.=");
+        DEBUG_LOG(DEBUG_STR("Standby Temp.="));
         temperature = get_standby_temperature();
       } else {
-        DEBUG_LOG("Target Temp.=");
+        DEBUG_LOG(DEBUG_STR("Target Temp.="));
         temperature = get_target_temperature();
       }
       DEBUG_LOG_LN(temperature);
-      DEBUG_LOG("Iron PWM=");
+      DEBUG_LOG(DEBUG_STR("Iron PWM="));
       DEBUG_LOG_LN(get_iron_pwm());
     }
   }
@@ -143,7 +143,7 @@ void setup() {
 #ifdef SERIAL_MODULE
   Serial.begin(115200);
 #endif //SERIAL_MODULE
-  DEBUG_LOG_LN("Booting...");
+  DEBUG_LOG_LN(DEBUG_STR("Booting..."));
 
   // Init modules
   iron_init();
@@ -169,7 +169,7 @@ void setup() {
     load_settings();
 #ifndef ROTATING_UP_DOWN
   } else {
-    DEBUG_LOG_LN("Load default settings");
+    DEBUG_LOG_LN(DEBUG_STR("Load default settings"));
   }
 #endif //ROTATING_UP_DOWN
 #endif //MEMORY_SETTINGS
@@ -182,8 +182,8 @@ void setup() {
 #endif
   saveTimer.setInterval(DELAY_SAVE_SETTINGS_LOOP, save_settings);
     
-  DEBUG_LOG_LN("Boot end!");
-  DEBUG_LOG_LN("Solder station V0.1\n");
+  DEBUG_LOG_LN(DEBUG_STR("Boot end!"));
+  DEBUG_LOG_LN(DEBUG_STR("Solder station V0.1\n"));
 
   // Update data
   update_iron();

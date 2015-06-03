@@ -55,7 +55,7 @@ static byte SELS_PIN[3] = {
  * Init SEG7 stuff
  */
 void seg7_init() {
-  DEBUG_LOG_LN("Init SEG7");
+  DEBUG_LOG_LN(DEBUG_STR("Init SEG7"));
   for(byte i = 0; i < 8; i++) {
     digitalWrite(SEG_PIN[i], LOW); 
     pinMode(SEG_PIN[i], OUTPUT);
