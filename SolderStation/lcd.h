@@ -25,10 +25,12 @@ void lcd_clear();
  */
 void lcd_set_backlight(boolean enable);
 
+#ifdef LCD_MODULE_CONTRAST
 /*
  * Set contrast
  */
 void lcd_set_contrast(byte contrast);
+#endif //LCD_MODULE_CONTRAST
 
 /*
  * Print heat pwm

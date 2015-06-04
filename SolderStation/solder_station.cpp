@@ -18,7 +18,9 @@ struct _memory_settings {
   int standby_temperature;
 #ifdef LCD_MODULE
   lcd_mode lcd_backlight_mode;
+#ifdef LCD_MODULE_CONTRAST
   byte lcd_contrast;
+#endif //LCD_MODULE_CONTRAST
   byte language;
   temperature_unit tu;
 #endif //LCD_MODULE
@@ -32,7 +34,9 @@ struct _memory_settings {
   150,
 #ifdef LCD_MODULE
   LCD_ON,
-  30,
+#ifdef LCD_MODULE_CONTRAST
+  30,  // default contrast
+#endif //LCD_MODULE_CONTRAST
   0,
   TEMP_CELSIUS,
 #endif //LCD_MODULE
@@ -107,6 +111,7 @@ void set_lcd_backlight_mode(lcd_mode backlight) {
   lcd_set_backlight(settings.lcd_backlight_mode > LCD_OFF);
 }
 
+#ifdef LCD_MODULE_CONTRAST
 byte get_lcd_contrast() {
   return settings.lcd_contrast;
 }
@@ -115,6 +120,7 @@ void set_lcd_contrast(byte contrast) {
   settings.lcd_contrast = contrast > 100 ? 100 : (contrast < 0 ? 0 : contrast);
   lcd_set_contrast(settings.lcd_contrast);
 }
+#endif //LCD_MODULE_CONTRAST
 
 byte get_language() {
   return settings.language;
@@ -180,8 +186,10 @@ void load_settings() {
 #ifdef LCD_MODULE
   DEBUG_LOG(DEBUG_STR("LCD backlight: "));
   DEBUG_LOG_LN(settings.lcd_backlight_mode);
+#ifdef LCD_MODULE_CONTRAST
   DEBUG_LOG(DEBUG_STR("LCD Contrast: "));
   DEBUG_LOG_LN(settings.lcd_contrast);
+#endif //LCD_MODULE_CONTRAST
   DEBUG_LOG(DEBUG_STR("Language: "));
   DEBUG_LOG_LN(settings.language);
   DEBUG_LOG(DEBUG_STR("Temperature Unit: "));
@@ -208,7 +216,9 @@ void save_settings() {
 void update_settings() {
 #ifdef LCD_MODULE
   set_lcd_backlight_mode(get_lcd_backlight_mode());
+#ifdef LCD_MODULE_CONTRAST
   set_lcd_contrast(get_lcd_contrast());
+#endif //LCD_MODULE_CONTRAST
   set_language(get_language());
 #endif //LCD_MODULE
 }

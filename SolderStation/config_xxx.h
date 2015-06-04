@@ -36,11 +36,11 @@
 // LCD Module
 #define LCD_MODULE
 #define LCD_SHOW_HEAT
-#define LCD_PCD8544_MODULE
-#define LCD_PCD8544_CS 10
-#define LCD_PCD8544_DC 9
-#define LCD_PCD8544_RESET 8
-#define LCD_PCD8544_BL 2
+#define LCD_ST7735_MODULE
+#define LCD_ST7735_CS 10
+#define LCD_ST7735_DC 9
+#define LCD_ST7735_RESET 8
+#define LCD_ST7735_BL 2
 
 // LED Module
 #define LED_MODULE

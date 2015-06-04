@@ -77,7 +77,9 @@ static void right_for_text(uint16_t y, int len, byte size) {
 void lcd_init() {
   DEBUG_LOG_LN(DEBUG_STR("Init LCD PCD8544"));
   display.begin();
+#ifdef LCD_MODULE_CONTRAST
   display.setContrast(30);
+#endif //LCD_MODULE_CONTRAST
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(BLACK);
@@ -94,12 +96,14 @@ void lcd_set_backlight(boolean enable) {
   digitalWrite(LCD_PCD8544_BL, enable); 
 }
 
+#ifdef LCD_MODULE_CONTRAST
 /*
  * Set contrast
  */
 void lcd_set_contrast(byte contrast) {
   display.setContrast((byte)(((float)contrast) * 128.0f / 100.0f));
 }
+#endif //#ifdef LCD_MODULE_CONTRAST
 
 /*
  * Clear lcd

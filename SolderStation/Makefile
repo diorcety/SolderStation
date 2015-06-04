@@ -10,6 +10,7 @@ OPTIMIZATION_LEVEL = s
 ARDUINO_LIBS = \
 	Adafruit_GFX \
 	Adafruit_PCD8544 \
+	Adafruit_ST7735 \
 	Buttons \
 	SimpleTimer \
 	PinChangeInt \

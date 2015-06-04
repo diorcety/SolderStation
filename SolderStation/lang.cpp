@@ -15,7 +15,9 @@ static const char EN_MENU_LCD[] PROGMEM = "LCD";
 static const char EN_MENU_IRON[] PROGMEM = "Iron";
 static const char EN_MENU_LOCALE[] PROGMEM = "Localization";
 static const char EN_MENU_LCD_TITLE[] PROGMEM = "LCD Menu";
+#ifdef LCD_MODULE_CONTRAST
 static const char EN_MENU_LCD_CONTRAST[] PROGMEM = "Contrast";
+#endif //LCD_MODULE_CONTRAST
 static const char EN_MENU_LCD_BACKLIGHT[] PROGMEM = "Backlight";
 static const char EN_MENU_IRON_TITLE[] PROGMEM = "Iron";
 static const char EN_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "Target T"DEGREE_SYM;
@@ -37,7 +39,9 @@ static const char * const en_translation[] PROGMEM = {
   EN_MENU_IRON,
   EN_MENU_LOCALE,
   EN_MENU_LCD_TITLE,
+#ifdef LCD_MODULE_CONTRAST
   EN_MENU_LCD_CONTRAST,
+#endif //LCD_MODULE_CONTRAST
   EN_MENU_LCD_BACKLIGHT,
   EN_MENU_IRON_TITLE,
   EN_MENU_IRON_TARGET_TEMPERATURE,
@@ -60,7 +64,9 @@ static const char FR_MENU_LCD[] PROGMEM = "LCD";
 static const char FR_MENU_IRON[] PROGMEM = "Fer";
 static const char FR_MENU_LOCALE[] PROGMEM = "Localisation";
 static const char FR_MENU_LCD_TITLE[] PROGMEM = "LCD";
+#ifdef LCD_MODULE_CONTRAST
 static const char FR_MENU_LCD_CONTRAST[] PROGMEM = "Contrast";
+#endif //LCD_MODULE_CONTRAST
 static const char FR_MENU_LCD_BACKLIGHT[] PROGMEM = "Eclairage";
 static const char FR_MENU_IRON_TITLE[] PROGMEM = "Fer";
 static const char FR_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" consig.";
@@ -82,7 +88,9 @@ static const char * const fr_translation[] PROGMEM = {
   FR_MENU_IRON,
   FR_MENU_LOCALE,
   FR_MENU_LCD_TITLE,
+#ifdef LCD_MODULE_CONTRAST
   FR_MENU_LCD_CONTRAST,
+#endif //LCD_MODULE_CONTRAST
   FR_MENU_LCD_BACKLIGHT,
   FR_MENU_IRON_TITLE,
   FR_MENU_IRON_TARGET_TEMPERATURE,

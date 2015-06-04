@@ -362,12 +362,15 @@ public:
 class LCDMenuScreen: public AbstractEditMenuScreen {
 private:
   typedef enum {
-    CONTRAST = 0,
-    BLACKLIGHT,
+    BLACKLIGHT = 0,
+#ifdef LCD_MODULE_CONTRAST
+    CONTRAST,
+#endif// LCD_MODULE_CONTRAST
     MAX
   } Item;
   static item_entry menu_items[MAX];
-  
+
+#ifdef LCD_MODULE_CONTRAST
   static const char* get_contrast() {
     return my_sprintf("%d", get_lcd_contrast());
   }
@@ -376,6 +379,7 @@ private:
     set_lcd_contrast(get_lcd_contrast() + 2*inc);
     return true;
   }
+#endif //LCD_MODULE_CONTRAST
   
   static const char* get_backlight_mode() {
     switch(get_lcd_backlight_mode()) {
@@ -400,8 +404,10 @@ public:
 };
 
 item_entry LCDMenuScreen::menu_items[LCDMenuScreen::MAX] = {
+  {TT(MENU_LCD_BACKLIGHT), get_backlight_mode, set_backlight_mode},
+#ifdef LCD_MODULE_CONTRAST
   {TT(MENU_LCD_CONTRAST), get_contrast, set_contrast},
-  {TT(MENU_LCD_BACKLIGHT), get_backlight_mode, set_backlight_mode}
+#endif //LCD_MODULE_CONTRAST
 };
 
 
