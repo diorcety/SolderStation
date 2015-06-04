@@ -44,6 +44,8 @@ static void change_screen(Screen screen);
 
 #ifdef MENU_MODULE
 
+#define NO_SELECTED_ITEM 255
+
 typedef struct _item_entry {
   TranslatableText text;
   const char* (*get_fct)(void);
@@ -82,20 +84,24 @@ static boolean edit_menu(item_entry *item, byte count, byte selected, int inc_va
   return false;
 }
 
-static void display_menu(item_entry *item, byte count, byte selected, boolean edit) {
+static void display_menu(item_entry *item, byte count, byte last_selected, byte selected, boolean edit) {
   char buffer[128];
   for(byte i = 0; i < 4; ++i) {
-    const char *entry = NULL;
-    const char *value = NULL;
-    if(item != NULL && i < count) {
-      strcpy(buffer, GET_TEXT(item->text));
-      entry = buffer;
-      if(item->get_fct != NULL) {
-        value = item->get_fct();
+    if(last_selected == NO_SELECTED_ITEM || i == selected || i == last_selected) {
+      const char *entry = NULL;
+      const char *value = NULL;
+      if(item != NULL && i < count) {
+        strcpy(buffer, GET_TEXT(item->text));
+        entry = buffer;
+        if(item->get_fct != NULL) {
+          value = item->get_fct();
+        }
       }
+      lcd_print_item(i, entry, value, i==selected?(edit?ITEM_EDITION:ITEM_SELECTED):ITEM_NONE);
+    }
+    if(item != NULL && i < count) {
       ++item;
     }
-    lcd_print_item(i, entry, value, i==selected?(edit?ITEM_EDITION:ITEM_SELECTED):ITEM_NONE);
   }
 }
 
@@ -107,10 +113,12 @@ static void display_menu(item_entry *item, byte count, byte selected, boolean ed
 class MainScreen: public View {
 private:
   unsigned long last_edit_time;
+  bool fault_mode;
   
 public:
   MainScreen() {
     last_edit_time = 0;
+    fault_mode = false;
   }
 
   virtual ~MainScreen() {
@@ -126,6 +134,10 @@ public:
       return;
     }
 #endif //MENU_MODULE
+    if(is_fault_mode()) {
+      redraw();
+      return;
+    }
 #ifdef BEHAVIOUR_COMBO_STANDBY
     if(up && down) {
       set_standby_mode(!get_standby_mode());
@@ -171,8 +183,12 @@ public:
       seg7_print_fault();
 #endif //SEG7_MODULE
 #ifdef LCD_MODULE
+      if(!fault_mode) {
+        lcd_clear();
+      }
       lcd_print_fault();
 #endif //LCD_MODULE
+      fault_mode = true;
       return;
     }
     if(!get_standby_mode()) {
@@ -219,6 +235,7 @@ public:
  */
 class MainMenuScreen: public View {
 private:
+  byte last_selected_item;
   byte selected_item;
   boolean edit;
   typedef enum {
@@ -231,6 +248,7 @@ private:
   
 public:
   MainMenuScreen() {
+    last_selected_item = NO_SELECTED_ITEM;
     selected_item = 0;
     edit = false;
   }
@@ -264,11 +282,13 @@ public:
       return;
     }
     if(up) {
+      last_selected_item = selected_item;
       selected_item = rooling(selected_item, (byte)0, (byte)(MAX), up);
       redraw();
       return;
     }
     if(down) {
+      last_selected_item = selected_item;
       selected_item = rooling(selected_item, (byte)0, (byte)(MAX), -down);
       redraw();
       return;
@@ -276,8 +296,10 @@ public:
   }
   
   virtual void draw() {
-    lcd_print_title(GET_TEXT(TT(MENU_MAIN_TITLE)));
-    display_menu(menu_items, MAX, selected_item, edit);
+    if(last_selected_item == NO_SELECTED_ITEM) {
+      lcd_print_title(GET_TEXT(TT(MENU_MAIN_TITLE)));
+    }
+    display_menu(menu_items, MAX, last_selected_item, selected_item, edit);
   }
 };
 
@@ -291,6 +313,8 @@ item_entry MainMenuScreen::menu_items[MainMenuScreen::MAX] = {
  * Abstract edit menu screen
  */
 class AbstractEditMenuScreen: public View {
+protected:
+  static byte last_selected_item;
 private:
   byte selected_item;
   boolean edit;
@@ -301,6 +325,7 @@ private:
   
 public:
   AbstractEditMenuScreen(TranslatableText tt, Screen parent_screen, item_entry *menu_items, byte items_count): tt(tt), parent_screen(parent_screen), menu_items(menu_items), items_count(items_count) {
+    last_selected_item = NO_SELECTED_ITEM;
     selected_item = 0;
     edit = false;
   }
@@ -324,14 +349,19 @@ public:
     }
     if(select) {
       edit = true;
+      // Don't redraw anything else now
+      last_selected_item = selected_item;
       redraw();
       return;
     }
     if(up) {
       if(!edit) {
+        last_selected_item = selected_item;
         selected_item = rooling(selected_item, (byte)0, (byte)(items_count), up);
         redraw();
       } else {
+        // Don't redraw anything else now (can be forced by the function to redraw all)
+        last_selected_item = selected_item;
         if(edit_menu(menu_items, items_count, selected_item, up)) {
           redraw();
         }
@@ -340,9 +370,12 @@ public:
     }
     if(down) {
       if(!edit) {
+        last_selected_item = selected_item;
         selected_item = rooling(selected_item, (byte)0, (byte)(items_count), -down);
         redraw();
       } else {
+        // Don't redraw anything else now (can be forced by the function to redraw all)
+        last_selected_item = selected_item;
         if(edit_menu(menu_items, items_count, selected_item, -down)) {
           redraw();
         }
@@ -351,10 +384,14 @@ public:
   }
   
   virtual void draw() {
-    lcd_print_title(GET_TEXT(tt));
-    display_menu(menu_items, items_count, selected_item, edit);
+    if(last_selected_item == NO_SELECTED_ITEM) {
+      lcd_print_title(GET_TEXT(tt));
+    }
+    display_menu(menu_items, items_count, last_selected_item, selected_item, edit);
   }
 };
+
+byte AbstractEditMenuScreen::last_selected_item = NO_SELECTED_ITEM;
 
 /*
  * LCD menu screen
@@ -501,7 +538,7 @@ private:
   
   static boolean set_lang(int inc) {
     set_language(rooling(get_language(), (byte)0, (byte)(TL(MAX)), inc));
-    lcd_clear();
+    last_selected_item = NO_SELECTED_ITEM; // Force redraw all (hack)
     return true;
   }
   

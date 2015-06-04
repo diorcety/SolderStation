@@ -109,83 +109,94 @@ void lcd_clear() {
  * Print heat signal
  */
 void lcd_print_heat(byte pwm) {
-  display.setTextSize(2);
+#define LCD_FONT_SIZE 2
+  display.setTextSize(LCD_FONT_SIZE);
   display.setTextColor(ST7735_BLACK, ST7735_WHITE);
   display.setCursor(0, 0);
   const char* str = my_sprintf("%3d%%", (byte)(((float)pwm) * 100.0f / 255.0f));
   display.print(str);
+#undef LCD_FONT_SIZE
 }
 
 /*
  * Print iron temperature
  */
 void lcd_print_iron_temperature(int temperature) {
-  display.setTextSize(8);
-  center_for_text(30, 3, 8);
+#define LCD_FONT_SIZE 8
+  display.setTextSize(LCD_FONT_SIZE);
+  center_for_text(30, 3, LCD_FONT_SIZE);
   display.setTextColor(ST7735_BLACK, ST7735_WHITE);
   __lcd_print_temperature(temperature);
+#undef LCD_FONT_SIZE
 }
 
 /*
  * Print target temperature
  */
 void lcd_print_target_temperature(int temperature) {
-  display.setTextSize(2);
-  right_for_text(0, 3, 2);
+#define LCD_FONT_SIZE 2
+  display.setTextSize(LCD_FONT_SIZE);
+  right_for_text(0, 3, LCD_FONT_SIZE);
   display.setTextColor(ST7735_BLACK, ST7735_WHITE);
   __lcd_print_temperature(temperature);
+#undef LCD_FONT_SIZE
 }
 
 /*
  * Print standby temperature
  */
 void lcd_print_standby_temperature(int temperature) {
-  display.setTextSize(2);
-  right_for_text(0, 3, 2);
+#define LCD_FONT_SIZE 2
+  display.setTextSize(LCD_FONT_SIZE);
+  right_for_text(0, 3, LCD_FONT_SIZE);
   display.setTextColor(ST7735_WHITE, ST7735_BLACK);
   __lcd_print_temperature(temperature);
+#undef LCD_FONT_SIZE
 }
 
 /*
  * Print temperature unit
  */
 void lcd_print_temperature_unit() {
-  display.setTextSize(2);
-  center_for_text(0, 2, 2);
+#define LCD_FONT_SIZE 2
+  display.setTextSize(LCD_FONT_SIZE);
+  center_for_text(0, 2, LCD_FONT_SIZE);
   __lcd_print_temperature_unit();
+#undef LCD_FONT_SIZE
 }
 
 /*
  * Print fault
  */
 void lcd_print_fault() {
-  lcd_clear();
+#define LCD_FONT_SIZE 4
   const char *msg = GET_TEXT(TT(T_FAULT));
-  display.setTextSize(6);
-  center_for_text((display.height()-FONT_HEIGHT*2)/2, strlen(msg), 6);
+  display.setTextSize(LCD_FONT_SIZE);
+  center_for_text((display.height()-FONT_HEIGHT*LCD_FONT_SIZE)/2, strlen(msg), LCD_FONT_SIZE);
   display.print(msg);
+#undef LCD_FONT_SIZE
 }
 
 /*
  * Print title
  */
 void lcd_print_title(const char *title) {
-#define LCD_MENU_SIZE 2
-    display.setTextSize(LCD_MENU_SIZE);
-    display.fillRect(0, 0, display.width(), (FONT_HEIGHT * LCD_MENU_SIZE), MENU_HEADER_BG);
+#define LCD_FONT_SIZE 2
+    display.setTextSize(LCD_FONT_SIZE);
+    display.fillRect(0, 0, display.width(), (FONT_HEIGHT * LCD_FONT_SIZE), MENU_HEADER_BG);
     display.setTextColor(MENU_HEADER_FG, MENU_HEADER_BG);
-    center_for_text(0, strlen(title), LCD_MENU_SIZE);
+    center_for_text(0, strlen(title), LCD_FONT_SIZE);
     display.print(title);
-    display.drawLine(0, FONT_HEIGHT * LCD_MENU_SIZE, display.width(), FONT_HEIGHT * LCD_MENU_SIZE, ST7735_BLACK);
-#undef LCD_MENU_SIZE
+    display.drawLine(0, FONT_HEIGHT * LCD_FONT_SIZE, display.width(), FONT_HEIGHT * LCD_FONT_SIZE, ST7735_BLACK);
+#undef LCD_FONT_SIZE
 }
 
 /*
  * Print item
  */
 void lcd_print_item(byte line, const char *item, const char *value, item_state state) {
-#define LCD_MENU_SIZE 2
-    byte y = ((FONT_HEIGHT * LCD_MENU_SIZE + 2) * line);
+#define LCD_FONT_SIZE 2
+    byte y = ((FONT_HEIGHT * LCD_FONT_SIZE + 2) * line);
     int c;
     int bg;
     if(state == ITEM_SELECTED) {
@@ -195,11 +206,11 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
       c = MENU_ITEM_FG;
       bg = MENU_ITEM_BG;
     }
-    display.fillRect(0, (FONT_HEIGHT * LCD_MENU_SIZE + 1) + y, display.width(), (FONT_HEIGHT * LCD_MENU_SIZE + 2), bg);
+    display.fillRect(0, (FONT_HEIGHT * LCD_FONT_SIZE + 1) + y, display.width(), (FONT_HEIGHT * LCD_FONT_SIZE + 2), bg);
     if(item != NULL) {
       display.setTextSize(1);
       display.setTextColor(c, bg);
-      display.setCursor(0, (FONT_HEIGHT * LCD_MENU_SIZE + 2) + FONT_HEIGHT / 2 + y);
+      display.setCursor(0, (FONT_HEIGHT * LCD_FONT_SIZE + 2) + FONT_HEIGHT / 2 + y);
       display.print(item);
     }
     if(value != NULL) {
@@ -210,12 +221,12 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
          c = ST7735_BLACK;
         bg = ST7735_WHITE;
       }
-      display.setTextSize(LCD_MENU_SIZE);
+      display.setTextSize(LCD_FONT_SIZE);
       display.setTextColor(c, bg);
-      right_for_text((FONT_HEIGHT *LCD_MENU_SIZE + 2) + y, strlen(value), LCD_MENU_SIZE);
+      right_for_text((FONT_HEIGHT *LCD_FONT_SIZE + 2) + y, strlen(value), LCD_FONT_SIZE);
       display.print(value);
     }
-#undef LCD_MENU_SIZE
+#undef LCD_FONT_SIZE
 }
 
 /*
