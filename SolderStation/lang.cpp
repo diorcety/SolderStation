@@ -112,8 +112,17 @@ static const char * const* const translations[TL(MAX)] = {
 
 static TranslatableLang currentLang = TL(EN);
 
+static const char * get_text(byte lang, TranslatableText tt) {
+  static char buffer[128];
+  strcpy_P(buffer, (char*)pgm_read_word(&(translations[lang][tt])));
+  return buffer;
+  //return translations[currentLang][tt];
+}
+
+
 const char * lang_get_name(TranslatableLang tl) {
-  return translations[tl][TT(LANG)];
+  return get_text(tl, TT(LANG));
+  //return translations[tl][TT(LANG)];
 }
 
 TranslatableLang lang_get_current() {
@@ -124,10 +133,9 @@ void lang_set_current(TranslatableLang tl) {
   currentLang = tl;
 }
 
+
 const char * GET_TEXT(TranslatableText tt) {
-  static char buffer[128];
-  strcpy_P(buffer, (char*)pgm_read_word(&(translations[0][tt])));
-  return buffer;
+  return get_text(currentLang, tt);
   //return translations[currentLang][tt];
 }
 
