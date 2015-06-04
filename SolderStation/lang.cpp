@@ -59,7 +59,7 @@ static const char * const en_translation[] PROGMEM = {
 static const char FR_LANG[] PROGMEM = "Fr";
 static const char FR_T_ON[] PROGMEM = "On";
 static const char FR_T_OFF[] PROGMEM = "Off";
-static const char FR_MENU_MAIN_TITLE[] PROGMEM = "Menu principal";
+static const char FR_MENU_MAIN_TITLE[] PROGMEM = "Menu Princip.";
 static const char FR_MENU_LCD[] PROGMEM = "LCD";
 static const char FR_MENU_IRON[] PROGMEM = "Fer";
 static const char FR_MENU_LOCALE[] PROGMEM = "Localisation";
@@ -72,13 +72,13 @@ static const char FR_MENU_IRON_TITLE[] PROGMEM = "Fer";
 static const char FR_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" consig.";
 static const char FR_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" repos";
 #ifdef HEAT_PROTECTION
-static const char FR_MENU_IRON_PROTECTION_PWM[] PROGMEM = "Prot. limite";
+static const char FR_MENU_IRON_PROTECTION_PWM[] PROGMEM = "Prot. lim.";
 static const char FR_MENU_IRON_PROTECTION_TIME[] PROGMEM = "Prot. temps";
 #endif
 static const char FR_MENU_LOCALE_TITLE[] PROGMEM = "Localisation";
 static const char FR_MENU_LOCALE_LANG[] PROGMEM = "Langage";
 static const char FR_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "Unite T"DEGREE_SYM;
-static const char FR_T_FAULT[] PROGMEM = "Défaut";
+static const char FR_T_FAULT[] PROGMEM = "Defaut";
 static const char * const fr_translation[] PROGMEM = {
   FR_LANG,
   FR_T_ON,
