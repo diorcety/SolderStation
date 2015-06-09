@@ -32,7 +32,7 @@
  */
 
 #define CONFIG_DC3MKB 1
-#define CONFIG_MO 2
+#define CONFIG_ELECTROLAB 2
 #define CONFIG_XXX 3
 
 // Set the board name. Please change the name of the configuration following your board
@@ -43,8 +43,8 @@
 #include "config_xxx.h"
 #elif CONFIG_NAME==CONFIG_DC3MKB
 #include "config_dc3mkb.h"
-#elif CONFIG_NAME==CONFIG_MO
-#include "config_mo.h"
+#elif CONFIG_NAME==CONFIG_ELECTROLAB
+#include "config_electrolab.h"
 #else
 #error Invalid or no configuration defined
 #endif //CONFIG_NAME
