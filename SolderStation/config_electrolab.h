@@ -1,5 +1,5 @@
-#ifndef _CONFIG_MO_H
-#define _CONFIG_MO_H
+#ifndef _CONFIG_ELECTROLAB_H
+#define _CONFIG_ELECTROLAB_H
 
 // Iron pins
 #define PIN_PWM_OUT 3
@@ -52,4 +52,4 @@
 #define HEAT_PROTECTION
 #define MEMORY_SETTINGS
 
-#endif //_CONFIG_DC3MKB_H
+#endif //_CONFIG_ELECTROLAB_H
