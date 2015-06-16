@@ -1,6 +1,9 @@
 #ifndef _CONFIG_DC3MKB_H
 #define _CONFIG_DC3MKB_H
 
+// Temperature step number
+#define TEMP_STEP 1
+
 // Iron pins
 #define PIN_PWM_OUT 3
 #define PIN_PROBE_IN A0

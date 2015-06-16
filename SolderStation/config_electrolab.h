@@ -1,6 +1,12 @@
 #ifndef _CONFIG_ELECTROLAB_H
 #define _CONFIG_ELECTROLAB_H
 
+// Temperature meaning (in milliseconds)
+#define TEMP_MEAN 500
+
+// Temperature step number
+#define TEMP_STEP 5
+
 // Iron pins
 #define PIN_PWM_OUT 3
 #define PIN_PROBE_IN A7

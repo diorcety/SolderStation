@@ -18,17 +18,8 @@
 // Gain
 #define CNTRL_GAIN 10
 
-// Iron delay before measuring
-#define DELAY_BEFORE_MEASURE_IN_MS 10
-
 // Maximum iron temperature capability
 #define MAX_IRON_TEMP_IN_DEGREES 400
-
-// Temperature meaning (in milliseconds)
-#define TEMP_MEAN 500
-
-// Temperature step number
-#define TEMP_STEP 5
 
 /*
  * Board configuration

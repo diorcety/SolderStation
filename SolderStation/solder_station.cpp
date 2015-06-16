@@ -6,7 +6,11 @@
 #include "lcd.h"
 #include "lang.h"
 
+#ifdef TEMP_MEAN
 static float iron_temperature = 0.0f;
+#else //TEMP_MEAN
+static int iron_temperature = 0;
+#endif //TEMP_MEAN
 static bool fault_mode = false;
 static byte iron_pwm = 0;
 static boolean standby_mode = false;
@@ -80,11 +84,15 @@ int get_iron_temperature() {
 }
 
 void set_iron_temperature(int tTmp) {
+#ifdef TEMP_MEAN
 #define MEAN_COUNT ((float) (TEMP_MEAN/(DELAY_MAIN_LOOP*2))) // Only one period on two are used for measurement
   float temp_iron_temperature = iron_temperature * (MEAN_COUNT - 1.0f);
   temp_iron_temperature += ((float)tTmp);
   iron_temperature = temp_iron_temperature / MEAN_COUNT;
 #undef MEAN_COUNT
+#else //TEMP_MEAN
+  iron_temperature = tTmp;
+#endif //TEMP_MEAN
 }
 
 int get_iron_pwm() {

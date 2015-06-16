@@ -17,8 +17,6 @@
 
 #define PWM_DIV 1024 //default: 64
 
-#define DELAY_BEFORE_MEASURE DELAY_BEFORE_MEASURE_IN_MS
-
 /*
  * Init iron stuff
  */
