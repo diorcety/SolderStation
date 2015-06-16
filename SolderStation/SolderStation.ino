@@ -36,7 +36,7 @@ int compute_iron_pwm(int actual_temperature, int target_temperature) {
   return pwm;
 }
 
-void update_iron_temperature() {
+void update_iron_temperature(int iron_temperature) {
   if(is_fault_mode()) {
     set_iron_pwm(0);
     iron_set_pwm(0);
@@ -47,7 +47,7 @@ void update_iron_temperature() {
     } else {
       temperature = get_target_temperature();
     }
-    set_iron_pwm(compute_iron_pwm(get_iron_temperature(), temperature));
+    set_iron_pwm(compute_iron_pwm(iron_temperature, temperature));
     iron_set_pwm(get_iron_pwm());
   }
   
@@ -91,7 +91,7 @@ void update_iron() {
   } else {
     int iron_temperature = iron_get_temperature();
     set_iron_temperature(iron_temperature);
-    update_iron_temperature();
+    update_iron_temperature(iron_temperature);
   }
   
 #ifdef HEAT_PROTECTION

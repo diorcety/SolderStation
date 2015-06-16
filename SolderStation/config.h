@@ -24,6 +24,9 @@
 // Maximum iron temperature capability
 #define MAX_IRON_TEMP_IN_DEGREES 400
 
+// Temperature meaning (in milliseconds)
+#define TEMP_MEAN 500
+
 // Temperature step number
 #define TEMP_STEP 5
 
