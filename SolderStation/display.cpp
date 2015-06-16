@@ -8,6 +8,10 @@
 #include "utils.h"
 #include "lang.h"
 
+#ifndef TEMP_STEP
+#error Missing configuration of TEMP_STEP
+#endif
+
 class View {
 public:
   virtual ~View() = 0;
@@ -114,11 +118,19 @@ class MainScreen: public View {
 private:
   unsigned long last_edit_time;
   bool fault_mode;
-  
+#ifdef TEMP_IRON_REFRESH
+  unsigned long last_update_time;
+  int saved_iron_temperature;
+#endif //TEMP_IRON_REFRESH
+
 public:
   MainScreen() {
     last_edit_time = 0;
     fault_mode = false;
+#ifdef TEMP_IRON_REFRESH
+    last_update_time = 0;
+    saved_iron_temperature = 0;
+#endif //TEMP_IRON_REFRESH
   }
 
   virtual ~MainScreen() {
@@ -191,13 +203,24 @@ public:
       fault_mode = true;
       return;
     }
+    
+#ifdef TEMP_IRON_REFRESH
+    unsigned long current_time = millis();
+    if(last_update_time + TEMP_IRON_REFRESH <= current_time) {
+      saved_iron_temperature = get_iron_temperature();
+      last_update_time = current_time;
+    }
+#else //TEMP_IRON_REFRESH
+    int saved_iron_temperature = get_iron_temperature();
+#endif //TEMP_IRON_REFRESH
+    
     if(!get_standby_mode()) {
 #ifdef LCD_MODULE
       lcd_print_target_temperature(get_target_temperature());
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
       if(last_edit_time < millis()) {
-        seg7_print(get_iron_temperature());
+        seg7_print(saved_iron_temperature);
       } else {
         seg7_print(get_target_temperature());
       }
@@ -208,7 +231,7 @@ public:
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
       if(last_edit_time < millis()) {
-        seg7_print(get_iron_temperature());
+        seg7_print(saved_iron_temperature);
       } else {
         seg7_print(get_standby_temperature());
       }
@@ -220,7 +243,7 @@ public:
 #endif //SEG7_PWM_DOT
 #endif //SEG7_MODULE
 #ifdef LCD_MODULE
-    lcd_print_iron_temperature(get_iron_temperature());
+    lcd_print_iron_temperature(saved_iron_temperature);
 #ifdef LCD_SHOW_HEAT
     lcd_print_heat(get_iron_pwm());
 #endif //LCD_SHOW_HEAT

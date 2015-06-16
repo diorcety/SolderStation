@@ -2,7 +2,10 @@
 #define _CONFIG_ELECTROLAB_H
 
 // Temperature meaning (in milliseconds)
-#define TEMP_MEAN 500
+#define TEMP_MEAN 100
+
+// Temperature refresh (in milliseconds)
+#define TEMP_IRON_REFRESH 500
 
 // Temperature step number
 #define TEMP_STEP 5
