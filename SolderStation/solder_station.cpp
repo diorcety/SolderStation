@@ -85,6 +85,9 @@ int get_iron_temperature() {
 
 void set_iron_temperature(int tTmp) {
 #ifdef TEMP_MEAN
+#if TEMP_MEAN < DELAY_MAIN_LOOP*2
+#error TEMP_MEAN should be greater than DELAY_MAIN_LOOP*2
+#endif
 #define MEAN_COUNT ((float) (TEMP_MEAN/(DELAY_MAIN_LOOP*2))) // Only one period on two are used for measurement
   float temp_iron_temperature = iron_temperature * (MEAN_COUNT - 1.0f);
   temp_iron_temperature += ((float)tTmp);
