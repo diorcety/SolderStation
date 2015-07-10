@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 23/05/2015 22:55:52
+Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = 10/07/2015 19:31:24
 
 BeginCmp
 TimeStamp = /54B0F663;
@@ -40,6 +40,13 @@ TimeStamp = /54B0F833;
 Reference = IC1;
 ValeurCmp = OPA336U;
 IdModule  = SMD_Packages:SOIC-8-W;
+EndCmp
+
+BeginCmp
+TimeStamp = /55A00756;
+Reference = JP1;
+ValeurCmp = JUMPER;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
 EndCmp
 
 BeginCmp

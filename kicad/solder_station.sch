@@ -775,7 +775,7 @@ F 3 "" H 3550 5150 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	3700 5150 4250 5150
+	3700 5150 8050 5150
 Connection ~ 3950 5150
 Wire Wire Line
 	3400 5150 3400 5500
@@ -921,4 +921,33 @@ Wire Wire Line
 Connection ~ 6600 3650
 Wire Wire Line
 	6700 3500 5450 3500
+$Comp
+L JUMPER JP1
+U 1 1 55A00756
+P 8650 5350
+F 0 "JP1" H 8650 5500 50  0000 C CNN
+F 1 "JUMPER" H 8650 5270 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02" H 8650 5350 60  0001 C CNN
+F 3 "" H 8650 5350 60  0000 C CNN
+	1    8650 5350
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9450 3350 9450 3450
+Wire Wire Line
+	8600 3350 9450 3350
+Wire Wire Line
+	8600 3350 8600 4900
+Wire Wire Line
+	8600 4900 8650 4900
+Wire Wire Line
+	8650 4900 8650 5050
+Connection ~ 9600 6250
+Wire Wire Line
+	8050 5150 8050 5750
+Wire Wire Line
+	8050 5750 8650 5750
+Wire Wire Line
+	8650 5750 8650 5650
+Connection ~ 4250 5150
 $EndSCHEMATC
