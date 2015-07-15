@@ -35,7 +35,7 @@ struct _memory_settings {
   unsigned long checksum;
 } settings = {
   300,
-  150,
+  100,
 #ifdef LCD_MODULE
   LCD_ON,
 #ifdef LCD_MODULE_CONTRAST
