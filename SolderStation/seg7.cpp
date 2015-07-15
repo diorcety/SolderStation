@@ -96,7 +96,10 @@ static byte DIGITS[10] = {
 };
 
 static byte LETTER_E = SET_STATE(1, A) | SET_STATE(1, D) | SET_STATE(1, E) | SET_STATE(1, F) | SET_STATE(1, G);
-static byte LETTER_R = SET_STATE(1, E) | SET_STATE(1, G);
+static byte LETTER_S = SET_STATE(1, A) | SET_STATE(1, C) | SET_STATE(1, D) | SET_STATE(1, F) | SET_STATE(1, G);
+static byte LETTER_r = SET_STATE(1, E) | SET_STATE(1, G);
+static byte LETTER_b = SET_STATE(1, C) | SET_STATE(1, D) | SET_STATE(1, E) | SET_STATE(1, F) | SET_STATE(1, G);
+static byte LETTER_t = SET_STATE(1, D) | SET_STATE(1, E) | SET_STATE(1, F) | SET_STATE(1, G);
 
 static void print_value(byte digit_value) {
   for(byte i = 0; i < 8; i++) {
@@ -146,9 +149,29 @@ void seg7_print_fault() {
   if(current_sel == 0) {
     value = LETTER_E;
   } else if(current_sel == 1) {
-    value = LETTER_R;
+    value = LETTER_r;
   } else {
-    value = LETTER_R;
+    value = LETTER_r;
+  }
+  
+  print_value(value);
+  
+  digitalWrite(SELS_PIN[current_sel], HIGH);
+}
+
+void seg7_print_standby() {
+  digitalWrite(SELS_PIN[current_sel], LOW);
+  
+  seg7_move();
+  
+  byte value = 0;
+  
+  if(current_sel == 0) {
+    value = LETTER_S;
+  } else if(current_sel == 1) {
+    value = LETTER_t;
+  } else {
+    value = LETTER_b;
   }
   
   print_value(value);

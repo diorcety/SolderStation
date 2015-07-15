@@ -230,11 +230,15 @@ public:
       lcd_print_standby_temperature(get_standby_temperature());
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
+#ifndef SEG7_STB
       if(last_edit_time < millis()) {
         seg7_print(saved_iron_temperature);
       } else {
         seg7_print(get_standby_temperature());
       }
+#else //SEG7_STB
+      seg7_print_standby();
+#endif //SEG7_STB
 #endif //SEG7_MODULE
     }
 #ifdef SEG7_MODULE

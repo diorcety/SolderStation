@@ -32,6 +32,7 @@
 
 // SEG7 Module
 #define SEG7_MODULE
+#define SEG7_STB
 #define SEG7_A_PIN 6
 #define SEG7_B_PIN 7
 #define SEG7_C_PIN 8
