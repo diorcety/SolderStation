@@ -1,10 +1,14 @@
 #ifndef _CONFIG_XXX_H
 #define _CONFIG_XXX_H
 
+// Redefine gain
+#undef CNTRL_GAIN
+#define CNTRL_GAIN 25
+
 // Temperature meaning (in milliseconds)
 #define TEMP_MEAN 100
 
-// Temperature refresh (in ms)
+// Temperature refresh (in milliseconds)
 #define TEMP_IRON_REFRESH 500
 
 // Temperature step number

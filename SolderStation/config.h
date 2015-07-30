@@ -21,6 +21,9 @@
 // Maximum iron temperature capability
 #define MAX_IRON_TEMP_IN_DEGREES 400
 
+// Default value
+#define DEFAULT_STANDBY_TEMPERATURE 150
+
 /*
  * Board configuration
  */

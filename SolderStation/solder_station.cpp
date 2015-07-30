@@ -35,7 +35,7 @@ struct _memory_settings {
   unsigned long checksum;
 } settings = {
   300,
-  100,
+  DEFAULT_STANDBY_TEMPERATURE,
 #ifdef LCD_MODULE
   LCD_ON,
 #ifdef LCD_MODULE_CONTRAST

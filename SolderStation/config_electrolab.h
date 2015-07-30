@@ -16,7 +16,7 @@
 
 // Controls
 #define ROTATING_UP_DOWN
-#define ROTATING_UP_DOWN_DIVIDER 4
+#define ROTATING_UP_DOWN_DIVIDER -4 // Invert the rotation
 #define BUTTON_UP_PIN 13
 #define BUTTON_UP_PULL 1
 #define BUTTON_UP_INVERTED 1
