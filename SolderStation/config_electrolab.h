@@ -1,6 +1,10 @@
 #ifndef _CONFIG_ELECTROLAB_H
 #define _CONFIG_ELECTROLAB_H
 
+// Override default standby temperature
+#undef DEFAULT_STANDBY_TEMPERATURE
+#define DEFAULT_STANDBY_TEMPERATURE 20
+
 // Temperature meaning (in milliseconds)
 #define TEMP_MEAN 100
 
