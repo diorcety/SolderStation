@@ -142,7 +142,7 @@ void update_iron() {
  */
 void setup() {
 #ifdef SERIAL_MODULE
-  Serial.begin(115200);
+  Serial.begin(SERIAL_BAUD);
 #endif //SERIAL_MODULE
   DEBUG_LOG_LN(DEBUG_STR("Booting..."));
 
