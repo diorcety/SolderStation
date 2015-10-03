@@ -9,7 +9,7 @@
 #include <buttons.h>
 #define LIBCALL_PINCHANGEINT
 #include <PinChangeInt.h>
-
+#include <avr/wdt.h>
 
 #include <SimpleTimer.h>
 #include "solder_station.h"
@@ -186,6 +186,9 @@ void setup() {
   DEBUG_LOG_LN(DEBUG_STR("Boot end!"));
   DEBUG_LOG_LN(DEBUG_STR("Solder station V0.1\n"));
 
+  // Start WD
+  wdt_enable(WDTO_500MS);
+
   // Update data
   update_iron();
   update_settings();
@@ -195,6 +198,8 @@ void setup() {
  * Main loop
  */
 void loop() {
+  wdt_reset();
+  
   uiTimer.run(); 
   ironTimer.run();
 #if 0 // Not really usefull for the moment
