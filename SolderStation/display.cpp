@@ -117,6 +117,7 @@ static void display_menu(item_entry *item, byte count, byte last_selected, byte 
 class MainScreen: public View {
 private:
   unsigned long last_edit_time;
+  bool last_standby_mode;
   bool fault_mode;
 #ifdef TEMP_IRON_REFRESH
   unsigned long last_update_time;
@@ -126,6 +127,7 @@ private:
 public:
   MainScreen() {
     last_edit_time = 0;
+    last_standby_mode = 0;
     fault_mode = false;
 #ifdef TEMP_IRON_REFRESH
     last_update_time = 0;
@@ -159,9 +161,15 @@ public:
       return;
     }
 #endif //BEHAVIOUR_COMBO_STANDBY
-    
+
+    // Reset edit in case of standby mode change
+    if(last_standby_mode != get_standby_mode()) {
+        last_edit_time = millis();
+    }
+    last_standby_mode = get_standby_mode();
+
     if(up) {
-      if(!get_standby_mode()) {
+      if(!last_standby_mode) {
         set_target_temperature(get_target_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
@@ -171,13 +179,13 @@ public:
 #elif BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_ALWAYS
         set_target_temperature(get_target_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
-#endif //BEHAVIOUR_STANDBY_LIVE_EDIT
+#endif //BEHAVIOUR_EDIT
       }
       redraw();
       return;
     }
     if(down) {
-      if(!get_standby_mode()) {
+      if(!last_standby_mode) {
         set_target_temperature(get_target_temperature() - TEMP_STEP * down);
         last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
@@ -221,32 +229,58 @@ public:
 #endif //TEMP_IRON_REFRESH
     
     if(!get_standby_mode()) {
+      if(last_edit_time <= millis()) {
+        // non-edit mode
 #ifdef LCD_MODULE
-      lcd_print_target_temperature(get_target_temperature());
+        lcd_print_target_temperature(saved_iron_temperature);
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
-      if(last_edit_time < millis()) {
         seg7_print(saved_iron_temperature);
-      } else {
-        seg7_print(get_target_temperature());
-      }
 #endif //SEG7_MODULE
-    } else {
+      } else {
+        // edit mode
 #ifdef LCD_MODULE
-      lcd_print_standby_temperature(get_standby_temperature());
+        lcd_print_target_temperature(get_target_temperature());
+#endif //LCD_MODULE
+#ifdef SEG7_MODULE
+        seg7_print(get_target_temperature());
+#endif //SEG7_MODULE
+      }
+    } else {
+      if(last_edit_time <= millis()) {
+        // non-edit mode
+#ifdef LCD_MODULE
+        lcd_print_standby_temperature(saved_iron_temperature);
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
 #ifndef SEG7_STB
-      if(last_edit_time < millis()) {
         seg7_print(saved_iron_temperature);
-      } else {
-        seg7_print(get_standby_temperature());
-      }
 #else //SEG7_STB
-      seg7_print_standby();
+        // Print stb instead of the iron temperature
+        seg7_print_standby();
 #endif //SEG7_STB
 #endif //SEG7_MODULE
+      } else {
+        // edit mode
+#if BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_N_STANDBY
+#ifdef LCD_MODULE
+        lcd_print_standby_temperature(get_standby_temperature());
+#endif //LCD_MODULE
+#ifdef SEG7_MODULE
+        seg7_print(get_standby_temperature());
+#endif //SEG7_MODULE
+#elif BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_ALWAYS
+#ifdef LCD_MODULE
+        lcd_print_target_temperature(get_target_temperature());
+#endif //LCD_MODULE
+#ifdef SEG7_MODULE
+        seg7_print(get_target_temperature());
+#endif //SEG7_MODULE
+#endif //BEHAVIOUR_EDIT
+      }
     }
+
+    // Common display
 #ifdef SEG7_MODULE
 #ifdef SEG7_PWM_DOT
     seg7_print_heat(get_iron_pwm());
