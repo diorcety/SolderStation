@@ -40,6 +40,9 @@
 #define SERIAL_MODULE
 #define SERIAL_BAUD 115200
 
+// Behaviours
+#define BEHAVIOUR_EDIT BEHAVIOUR_EDIT_TARGET
+
 // Override UI loop -> LED
 #undef DELAY_UI_LOOP
 #define DELAY_UI_LOOP 5

@@ -159,16 +159,19 @@ public:
       return;
     }
 #endif //BEHAVIOUR_COMBO_STANDBY
-              
+    
     if(up) {
       if(!get_standby_mode()) {
         set_target_temperature(get_target_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
-#ifdef STANDBY_LIVE_EDIT
+#ifdef BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_N_STANDBY
         set_standby_temperature(get_standby_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
-#endif //STANDBY_LIVE_EDIT
+#elif BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_ALWAYS
+        set_target_temperature(get_target_temperature() + TEMP_STEP * up);
+        last_edit_time = millis() + DELAY_EDIT_TIME;
+#endif //BEHAVIOUR_STANDBY_LIVE_EDIT
       }
       redraw();
       return;
@@ -176,12 +179,15 @@ public:
     if(down) {
       if(!get_standby_mode()) {
         set_target_temperature(get_target_temperature() - TEMP_STEP * down);
-        last_edit_time = millis() + DELAY_EDIT_TIME; 
+        last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
-#ifdef BEHAVIOUR_STANDBY_LIVE_EDIT
+#if BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_N_STANDBY
         set_standby_temperature(get_standby_temperature() - TEMP_STEP * down);
         last_edit_time = millis() + DELAY_EDIT_TIME;
-#endif //BEHAVIOUR_STANDBY_LIVE_EDIT
+#elif BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_ALWAYS
+        set_target_temperature(get_target_temperature() - TEMP_STEP * down);
+        last_edit_time = millis() + DELAY_EDIT_TIME;
+#endif //BEHAVIOUR_EDIT
       }
       redraw();
       return;

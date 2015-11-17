@@ -25,6 +25,13 @@
 #define DEFAULT_STANDBY_TEMPERATURE 150
 
 /*
+ * Behaviours
+ */
+#define BEHAVIOUR_EDIT_TARGET 1 // Allow to edit target temperature in non-standby mode (default)
+#define BEHAVIOUR_EDIT_TARGET_ALWAYS 2 // Allow to edit target temeperature in any mode
+#define BEHAVIOUR_EDIT_TARGET_N_STANDBY 3 // Allow the temperature of the current mode
+
+/*
  * Board configuration
  */
 
