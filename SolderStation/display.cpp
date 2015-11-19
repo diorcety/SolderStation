@@ -173,7 +173,7 @@ public:
         set_target_temperature(get_target_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
       } else {
-#ifdef BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_N_STANDBY
+#if BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_N_STANDBY
         set_standby_temperature(get_standby_temperature() + TEMP_STEP * up);
         last_edit_time = millis() + DELAY_EDIT_TIME;
 #elif BEHAVIOUR_EDIT==BEHAVIOUR_EDIT_TARGET_ALWAYS
