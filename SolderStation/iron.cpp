@@ -22,11 +22,15 @@
  */
 void iron_init() {
   DEBUG_LOG_LN(DEBUG_STR("Init Iron"));
-  //set pin directions:
+
+  //set pins
   pinMode(PIN_PWM_OUT, OUTPUT);
+  digitalWrite(PIN_PWM_OUT, LOW);
   pinMode(PIN_PROBE_IN, INPUT);
-  
+
+  // Set PWM
   setPwmFrequency(PIN_PWM_OUT, PWM_DIV);
+  analogWrite(PIN_PWM_OUT, 0);
 }
 
 /*
