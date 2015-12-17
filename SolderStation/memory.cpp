@@ -12,7 +12,7 @@ void memory_save_settings(int offset, const void *settings, unsigned int size) {
     const byte* p = (const byte*)settings;
     unsigned int i;
     for (i = 0; i < size; i++)
-          EEPROM.write(offset++, *p++);
+          EEPROM.update(offset++, *p++);
 }
 
 /*
