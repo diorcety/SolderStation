@@ -83,6 +83,11 @@ static void updateBoundingBox(uint8_t xmin, uint8_t ymin, uint8_t xmax, uint8_t 
   if (xmax > xUpdateMax) xUpdateMax = xmax;
   if (ymin < yUpdateMin) yUpdateMin = ymin;
   if (ymax > yUpdateMax) yUpdateMax = ymax;
+#else
+  (void)xmin;
+  (void)ymin;
+  (void)xmax;
+  (void)ymax;
 #endif
 }
 

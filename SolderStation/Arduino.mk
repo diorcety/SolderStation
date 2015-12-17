@@ -66,7 +66,7 @@ CFLAGS_STD =
 CXXFLAGS_STD = 
 ### CXXFLAGS
 ### Flags you might want to set for debugging purpose. Comment to stop.
-CXXFLAGS += -Wall -Wextra
+CXXFLAGS += -Wall -Wextra -Werror -Wno-ignored-qualifiers -Wno-unused-variable -Wno-deprecated-declarations
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
 MONITOR_PORT = /dev/tty.usbmodem*

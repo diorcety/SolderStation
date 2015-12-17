@@ -16,6 +16,7 @@ static byte iron_pwm = 0;
 static boolean standby_mode = false;
 
 #define CHECKSUM_VALUE 0xDEADBEAF
+#define EEPROM_OFFSET 0x10
 
 struct _memory_settings {
   int target_temperature;
@@ -184,11 +185,15 @@ void load_settings() {
   
 #ifdef MEMORY_SETTINGS
   unsigned long checksum;
-  memory_load_settings(sizeof(settings) - sizeof(unsigned long), &checksum, sizeof(unsigned long));
+  memory_load_settings(EEPROM_OFFSET + sizeof(settings) - sizeof(unsigned long), &checksum, sizeof(unsigned long));
   
   if(checksum == CHECKSUM_VALUE) {
     DEBUG_LOG_LN(DEBUG_STR("Load from memory"));
-    memory_load_settings(0, &settings, sizeof(settings) - sizeof(unsigned long));
+    memory_load_settings(EEPROM_OFFSET, &settings, sizeof(settings) - sizeof(unsigned long));
+
+    // Security about corrupted eeprom
+    set_target_temperature(get_target_temperature());
+    set_standby_temperature(get_standby_temperature());
   } else {
     DEBUG_LOG_LN(DEBUG_STR("Memory is incorrect. Using default values"));
   }
@@ -224,7 +229,7 @@ void load_settings() {
 void save_settings() {
   DEBUG_LOG_LN(DEBUG_STR("Save settings"));
 #ifdef MEMORY_SETTINGS
-  memory_save_settings(0, &settings, sizeof(settings));
+  memory_save_settings(EEPROM_OFFSET, &settings, sizeof(settings));
 #endif //MEMORY_SETTINGS
 }
 
