@@ -680,6 +680,9 @@ static void change_view() {
     case SCREEN_MAIN:
       view = new(&view_memory) MainScreen();
     break;
+    case SCREEN_NONE:
+    case SCREEN_MAX:
+    break;
   }
 }
 

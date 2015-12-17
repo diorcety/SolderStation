@@ -160,7 +160,7 @@ private:
   }
 
   void pinChange(byte pin, uint8_t state) {
-    uint8_t otherState;
+    uint8_t otherState = 0;
     if(pin == GET_STATE(buttons_state[plus], PIN)) {
       otherState = minusState;
     } else if(pin == GET_STATE(buttons_state[minus], PIN)) {

@@ -18,9 +18,9 @@ void setPwmFrequency(int pin, int divisor) {
       default: return;
     }
     if(pin == 5 || pin == 6) {
-      TCCR0B = TCCR0B & 0b11111000 | mode;
+      TCCR0B = (TCCR0B & 0b11111000) | mode;
     } else {
-      TCCR1B = TCCR1B & 0b11111000 | mode;
+      TCCR1B = (TCCR1B & 0b11111000) | mode;
     }
   } else if(pin == 3 || pin == 11) {
     switch(divisor) {
@@ -33,7 +33,7 @@ void setPwmFrequency(int pin, int divisor) {
       case 1024: mode = 0x7; break;
       default: return;
     }
-    TCCR2B = TCCR2B & 0b11111000 | mode;
+    TCCR2B = (TCCR2B & 0b11111000) | mode;
   }
 }
 
