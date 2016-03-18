@@ -232,7 +232,7 @@ public:
       if(last_edit_time <= millis()) {
         // non-edit mode
 #ifdef LCD_MODULE
-        lcd_print_target_temperature(saved_iron_temperature);
+        lcd_print_target_temperature(get_target_temperature());
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
         seg7_print(saved_iron_temperature);
@@ -250,7 +250,7 @@ public:
       if(last_edit_time <= millis()) {
         // non-edit mode
 #ifdef LCD_MODULE
-        lcd_print_standby_temperature(saved_iron_temperature);
+        lcd_print_standby_temperature(get_standby_temperature());
 #endif //LCD_MODULE
 #ifdef SEG7_MODULE
 #ifndef SEG7_STB
