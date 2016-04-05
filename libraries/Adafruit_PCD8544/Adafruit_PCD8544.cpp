@@ -23,7 +23,15 @@ All text above, and the splash screen below must be included in any redistributi
 #else
   #include "WProgram.h"
 #endif
-#include <util/delay.h>
+
+#ifdef __AVR__
+  #include <util/delay.h>
+#endif
+
+#ifndef _BV
+  #define _BV(x) (1 << (x))
+#endif
+
 #include <stdlib.h>
 
 #include <Adafruit_GFX.h>
@@ -83,11 +91,6 @@ static void updateBoundingBox(uint8_t xmin, uint8_t ymin, uint8_t xmax, uint8_t 
   if (xmax > xUpdateMax) xUpdateMax = xmax;
   if (ymin < yUpdateMin) yUpdateMin = ymin;
   if (ymax > yUpdateMax) yUpdateMax = ymax;
-#else
-  (void)xmin;
-  (void)ymin;
-  (void)xmax;
-  (void)ymax;
 #endif
 }
 
@@ -197,7 +200,7 @@ void Adafruit_PCD8544::begin(uint8_t contrast, uint8_t bias) {
   // toggle RST low to reset
   if (_rst > 0) {
     digitalWrite(_rst, LOW);
-    _delay_ms(500);
+    delay(500);
     digitalWrite(_rst, HIGH);
   }
 
@@ -275,8 +278,8 @@ void Adafruit_PCD8544::setContrast(uint8_t val) {
   if (val > 0x7f) {
     val = 0x7f;
   }
-  command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
-  command(PCD8544_SETVOP | val); 
+  command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION );
+  command( PCD8544_SETVOP | val); 
   command(PCD8544_FUNCTIONSET);
   
  }
