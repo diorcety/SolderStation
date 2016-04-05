@@ -86,55 +86,64 @@ SimpleTimer saveTimer; // Save timer
 
 void update_iron() {
   static byte cycle = 0;
+  
   if((++cycle) & 0x1) { // TODO better stuff
     iron_set_pwm(0); //switch off heater and wait for some time (to get low pass filter in steady state)
   } else {
+    int previous_iron_temperature = get_iron_temperature();
     int iron_temperature = iron_get_temperature();
     set_iron_temperature(iron_temperature);
     update_iron_temperature(iron_temperature);
-  }
-  
+    
 #ifdef HEAT_PROTECTION
+#ifdef HEAT_PROTECTION_DROP
+    if(previous_iron_temperature >= (iron_temperature + get_protection_drop())) {
+      DEBUG_LOG_LN(DEBUG_STR("DROP FAULT"));
+      set_fault_mode();
+    }
+#endif //HEAT_PROTECTION_DROP
 #define CHECK_MEAN_PERIOD_MS 100
 #define CHECK_MEAN_COUNT 20.0f
 #define CHECK_PROTECTION_PERIOD_MS 1000
-  static float pwm_mean = 0.0f;
-  static int pwm_time = 0;
-  static unsigned long last_mean_check = 0;
-  static unsigned long last_protection_check = 0;
-  unsigned long current_check = millis();
-  if(last_mean_check + CHECK_MEAN_PERIOD_MS <= current_check) {
-    last_mean_check = current_check;
-    
-    // Update pwm
-    float pwm = pwm_mean * (CHECK_MEAN_COUNT - 1.0f);
-    pwm += get_iron_pwm();
-    pwm_mean = pwm / CHECK_MEAN_COUNT;
-  }
-  
-  if(last_protection_check + CHECK_PROTECTION_PERIOD_MS <= current_check) {
-    last_protection_check = current_check;
-    
-    DEBUG_LOG("PWM protection mean=");
-    DEBUG_LOG_LN(pwm_mean);
-    DEBUG_LOG("PWM protection time=");
-    DEBUG_LOG_LN(pwm_time);
-   
-    // Check pwm
-    if(pwm_mean >= (float)get_protection_pwm()) {
-      pwm_time++;
-    } else {
-      pwm_time = 0;
+    static float pwm_mean = 0.0f;
+    static int pwm_time = 0;
+    static unsigned long last_mean_check = 0;
+    static unsigned long last_protection_check = 0;
+    unsigned long current_check = millis();
+    if(last_mean_check + CHECK_MEAN_PERIOD_MS <= current_check) {
+      last_mean_check = current_check;
+      
+      // Update pwm
+      float pwm = pwm_mean * (CHECK_MEAN_COUNT - 1.0f);
+      pwm += get_iron_pwm();
+      pwm_mean = pwm / CHECK_MEAN_COUNT;
     }
     
-    if(pwm_time >= get_protection_time()) {
-      set_fault_mode();
+    if(last_protection_check + CHECK_PROTECTION_PERIOD_MS <= current_check) {
+      last_protection_check = current_check;
+      
+      DEBUG_LOG("PWM protection mean=");
+      DEBUG_LOG_LN(pwm_mean);
+      DEBUG_LOG("PWM protection time=");
+      DEBUG_LOG_LN(pwm_time);
+     
+      // Check pwm
+      if(pwm_mean >= (float)get_protection_pwm()) {
+        pwm_time++;
+      } else {
+        pwm_time = 0;
+      }
+      
+      if(pwm_time >= get_protection_time()) {
+        DEBUG_LOG_LN(DEBUG_STR("TIME FAULT"));
+        set_fault_mode();
+      }
     }
-  }
 #undef CHECK_MEAN_PERIOD_MS
 #undef CHECK_MEAN_COUNT
 #undef CHECK_PROTECTION_PERIOD_MS
 #endif //HEAT_PROTECTION
+  }
 }
 
 /*
@@ -187,7 +196,7 @@ void setup() {
   DEBUG_LOG_LN(DEBUG_STR("Solder station V0.1\n"));
 
   // Start WD
-  wdt_enable(WDTO_500MS);
+  wdt_enable(WDTO_1S);
 
   // Update data
   update_iron();

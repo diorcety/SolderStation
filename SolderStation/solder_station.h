@@ -72,6 +72,14 @@ int get_protection_time();
 
 void set_protection_time(int time);
 
+#ifdef HEAT_PROTECTION_DROP
+
+int get_protection_drop();
+
+void set_protection_drop(int drop);
+
+#endif //HEAT_PROTECTION_DROP
+
 #endif //HEAT_PROTECTION
 
 /*

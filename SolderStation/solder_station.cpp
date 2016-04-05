@@ -32,6 +32,9 @@ struct _memory_settings {
 #ifdef HEAT_PROTECTION
   byte protection_pwm;
   byte protection_time;
+#ifdef HEAT_PROTECTION_DROP
+  int protection_drop;
+#endif //HEAT_PROTECTION_DROP
 #endif //HEAT_PROTECTION
   unsigned long checksum;
 } settings = {
@@ -46,8 +49,11 @@ struct _memory_settings {
   TEMP_CELSIUS,
 #endif //LCD_MODULE
 #ifdef HEAT_PROTECTION
-  85, // 33%
-  15, // 15 seconds
+  HEAT_PROTECTION_VALUE,
+  HEAT_PROTECTION_TIME,
+#ifdef HEAT_PROTECTION_DROP
+  HEAT_PROTECTION_DROP,
+#endif //HEAT_PROTECTION_DROP
 #endif //HEAT_PROTECTION
   CHECKSUM_VALUE
 };
@@ -174,6 +180,18 @@ int get_protection_time() {
 void set_protection_time(int time) {
   settings.protection_time = time;
 }
+
+#ifdef HEAT_PROTECTION_DROP
+
+int get_protection_drop() {
+  return settings.protection_drop;
+}
+
+void set_protection_drop(int drop) {
+  settings.protection_drop = drop;
+}
+
+#endif //HEAT_PROTECTION_DROP
 
 #endif //HEAT_PROTECTION
 

@@ -31,7 +31,7 @@
 #error Missing configuration of LCD_PCD8544_BL
 #endif //LCD_PCD8544_BL
 
-Adafruit_PCD8544 display = Adafruit_PCD8544(LCD_PCD8544_DC, LCD_PCD8544_CS, LCD_PCD8544_RESET);
+static Adafruit_PCD8544 display = Adafruit_PCD8544(LCD_PCD8544_DC, LCD_PCD8544_CS, LCD_PCD8544_RESET);
 
 /*
  * Print a temperature
@@ -214,6 +214,10 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
       right_for_text((FONT_HEIGHT + 2) + y, strlen(value), 1);
       display.print(value);
     }
+}
+
+byte lcd_item_count() {
+  return 4;
 }
 
 /*

@@ -20,15 +20,18 @@ static const char EN_MENU_LCD_CONTRAST[] PROGMEM = "Contrast";
 #endif //LCD_MODULE_CONTRAST
 static const char EN_MENU_LCD_BACKLIGHT[] PROGMEM = "Backlight";
 static const char EN_MENU_IRON_TITLE[] PROGMEM = "Iron";
-static const char EN_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "Target T"DEGREE_SYM;
-static const char EN_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "Standby T"DEGREE_SYM;
+static const char EN_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "Target T" DEGREE_SYM;
+static const char EN_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "Standby T" DEGREE_SYM;
 #ifdef HEAT_PROTECTION
 static const char EN_MENU_IRON_PROTECTION_PWM[] PROGMEM = "Prot. limit";
 static const char EN_MENU_IRON_PROTECTION_TIME[] PROGMEM = "Prot. time";
-#endif
+#ifdef HEAT_PROTECTION_DROP
+static const char EN_MENU_IRON_PROTECTION_DROP[] PROGMEM = "Prot. drop";
+#endif //HEAT_PROTECTION_DROP
+#endif //HEAT_PROTECTION
 static const char EN_MENU_LOCALE_TITLE[] PROGMEM = "Localization";
 static const char EN_MENU_LOCALE_LANG[] PROGMEM = "Language";
-static const char EN_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "T"DEGREE_SYM" unit";
+static const char EN_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "T" DEGREE_SYM " unit";
 static const char EN_T_FAULT[] PROGMEM = "Fault";
 static const char * const en_translation[] PROGMEM = {
   EN_LANG,
@@ -49,7 +52,10 @@ static const char * const en_translation[] PROGMEM = {
 #ifdef HEAT_PROTECTION
   EN_MENU_IRON_PROTECTION_PWM,
   EN_MENU_IRON_PROTECTION_TIME,
-#endif
+#ifdef HEAT_PROTECTION_DROP
+  EN_MENU_IRON_PROTECTION_DROP,
+#endif //HEAT_PROTECTION_DROP
+#endif //HEAT_PROTECTION
   EN_MENU_LOCALE_TITLE,
   EN_MENU_LOCALE_LANG,
   EN_MENU_LOCALE_TEMPERATURE_UNIT,
@@ -69,15 +75,18 @@ static const char FR_MENU_LCD_CONTRAST[] PROGMEM = "Contrast";
 #endif //LCD_MODULE_CONTRAST
 static const char FR_MENU_LCD_BACKLIGHT[] PROGMEM = "Eclairage";
 static const char FR_MENU_IRON_TITLE[] PROGMEM = "Fer";
-static const char FR_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" consig.";
-static const char FR_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "T"DEGREE_SYM" repos";
+static const char FR_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "T" DEGREE_SYM " consig.";
+static const char FR_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "T" DEGREE_SYM " repos";
 #ifdef HEAT_PROTECTION
 static const char FR_MENU_IRON_PROTECTION_PWM[] PROGMEM = "Prot. lim.";
 static const char FR_MENU_IRON_PROTECTION_TIME[] PROGMEM = "Prot. temps";
-#endif
+#ifdef HEAT_PROTECTION_DROP
+static const char FR_MENU_IRON_PROTECTION_DROP[] PROGMEM = "Prot. chute";
+#endif //HEAT_PROTECTION_DROP
+#endif //HEAT_PROTECTION
 static const char FR_MENU_LOCALE_TITLE[] PROGMEM = "Localisation";
 static const char FR_MENU_LOCALE_LANG[] PROGMEM = "Langage";
-static const char FR_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "Unite T"DEGREE_SYM;
+static const char FR_MENU_LOCALE_TEMPERATURE_UNIT[] PROGMEM = "Unite T" DEGREE_SYM;
 static const char FR_T_FAULT[] PROGMEM = "Defaut";
 static const char * const fr_translation[] PROGMEM = {
   FR_LANG,
@@ -98,7 +107,10 @@ static const char * const fr_translation[] PROGMEM = {
 #ifdef HEAT_PROTECTION
   FR_MENU_IRON_PROTECTION_PWM,
   FR_MENU_IRON_PROTECTION_TIME,
-#endif
+#ifdef HEAT_PROTECTION_DROP
+  FR_MENU_IRON_PROTECTION_DROP,
+#endif //HEAT_PROTECTION_DROP
+#endif //HEAT_PROTECTION
   FR_MENU_LOCALE_TITLE,
   FR_MENU_LOCALE_LANG,
   FR_MENU_LOCALE_TEMPERATURE_UNIT,

@@ -89,8 +89,9 @@ static boolean edit_menu(item_entry *item, byte count, byte selected, int inc_va
 }
 
 static void display_menu(item_entry *item, byte count, byte last_selected, byte selected, boolean edit) {
-  char buffer[128];
-  for(byte i = 0; i < 4; ++i) {
+  static char buffer[128];
+  byte lcd_count = lcd_item_count();
+  for(byte i = 0; i < lcd_count; ++i) {
     if(last_selected == NO_SELECTED_ITEM || i == selected || i == last_selected) {
       const char *entry = NULL;
       const char *value = NULL;
@@ -526,6 +527,9 @@ private:
 #ifdef HEAT_PROTECTION
     PROTECTION_PWM,
     PROTECTION_TIME,
+#ifdef HEAT_PROTECTION_DROP
+    PROTECTION_DROP,
+#endif //HEAT_PROTECTION_DROP
 #endif //HEAT_PROTECTION
     MAX
   } Item;
@@ -569,6 +573,16 @@ private:
     ::set_protection_time(::get_protection_time() + (1 * inc));
     return true;
   }
+#ifdef HEAT_PROTECTION_DROP
+  static const char* get_protection_drop() {
+    return my_sprintf("%d", ::get_protection_drop());
+  }
+  
+  static boolean set_protection_drop(int inc) {
+    ::set_protection_drop(::get_protection_drop() + (1 * inc));
+    return true;
+  }
+#endif //HEAT_PROTECTION_DROP
 #endif //HEAT_PROTECTION
 public:
   IronMenuScreen(): AbstractEditMenuScreen(TT(MENU_IRON_TITLE), SCREEN_MENU_MAIN, menu_items, MAX) {
@@ -583,6 +597,9 @@ item_entry IronMenuScreen::menu_items[IronMenuScreen::MAX] = {
 #ifdef HEAT_PROTECTION
   {TT(MENU_IRON_PROTECTION_PWM), get_protection_pwm, set_protection_pwm},
   {TT(MENU_IRON_PROTECTION_TIME), get_protection_time, set_protection_time},
+#ifdef HEAT_PROTECTION_DROP
+  {TT(MENU_IRON_PROTECTION_DROP), get_protection_drop, set_protection_drop},
+#endif //HEAT_PROTECTION_DROP
 #endif //HEAT_PROTECTION
 };
 

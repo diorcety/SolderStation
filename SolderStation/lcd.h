@@ -77,6 +77,8 @@ typedef enum {
  */
 void lcd_print_item(byte line, const char *item, const char *value, item_state state);
 
+byte lcd_item_count();
+
 /*
  * Display on the lcd
  */

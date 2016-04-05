@@ -14,8 +14,6 @@
 
 #define FONT_WIDTH 6
 #define FONT_HEIGHT 8
-#define MENU_HEADER_BG ST7735_COLOR565(80,80,230)
-#define MENU_HEADER_FG ST7735_COLOR565(255,255,255)
 #define MENU_ITEM_BG ST7735_WHITE 
 #define MENU_ITEM_FG ST7735_BLACK
 #define MENU_ITEM_SELECTED_BG ST7735_BLACK
@@ -37,7 +35,9 @@
 #error Missing configuration of LCD_ST7735_BL
 #endif //LCD_ST7735_BL
 
-Adafruit_ST7735 display = Adafruit_ST7735(LCD_ST7735_CS, LCD_ST7735_DC, LCD_ST7735_RESET);
+static Adafruit_ST7735 display = Adafruit_ST7735(LCD_ST7735_CS, LCD_ST7735_DC, LCD_ST7735_RESET);
+static uint16_t MENU_HEADER_BG = display.Color565(80,80,230);
+static uint16_t MENU_HEADER_FG = display.Color565(255,255,255);
 
 /*
  * Print a temperature
@@ -85,6 +85,7 @@ void lcd_init() {
   display.initR(INITR_BLACKTAB);
   display.setRotation(3);
   display.fillScreen(ST7735_WHITE);
+  display.setTextWrap(false);
   
   // Switch off the Backlight
   digitalWrite(LCD_ST7735_BL, LOW); 
@@ -112,7 +113,7 @@ void lcd_print_heat(byte pwm) {
 #define LCD_FONT_SIZE 2
   display.setTextSize(LCD_FONT_SIZE);
   display.setTextColor(ST7735_BLACK, ST7735_WHITE);
-  display.setCursor(0, 0);
+  display.setCursor(1, 1);
   const char* str = my_sprintf("%3d%%", (byte)(((float)pwm) * 100.0f / 255.0f));
   display.print(str);
 #undef LCD_FONT_SIZE
@@ -136,7 +137,7 @@ void lcd_print_iron_temperature(int temperature) {
 void lcd_print_target_temperature(int temperature) {
 #define LCD_FONT_SIZE 2
   display.setTextSize(LCD_FONT_SIZE);
-  right_for_text(0, 3, LCD_FONT_SIZE);
+  right_for_text(1, 3, LCD_FONT_SIZE);
   display.setTextColor(ST7735_BLACK, ST7735_WHITE);
   __lcd_print_temperature(temperature);
 #undef LCD_FONT_SIZE
@@ -148,7 +149,7 @@ void lcd_print_target_temperature(int temperature) {
 void lcd_print_standby_temperature(int temperature) {
 #define LCD_FONT_SIZE 2
   display.setTextSize(LCD_FONT_SIZE);
-  right_for_text(0, 3, LCD_FONT_SIZE);
+  right_for_text(1, 3, LCD_FONT_SIZE);
   display.setTextColor(ST7735_WHITE, ST7735_BLACK);
   __lcd_print_temperature(temperature);
 #undef LCD_FONT_SIZE
@@ -160,7 +161,7 @@ void lcd_print_standby_temperature(int temperature) {
 void lcd_print_temperature_unit() {
 #define LCD_FONT_SIZE 2
   display.setTextSize(LCD_FONT_SIZE);
-  center_for_text(0, 2, LCD_FONT_SIZE);
+  center_for_text(1, 2, LCD_FONT_SIZE);
   __lcd_print_temperature_unit();
 #undef LCD_FONT_SIZE
 }
@@ -185,7 +186,7 @@ void lcd_print_title(const char *title) {
     display.setTextSize(LCD_FONT_SIZE);
     display.fillRect(0, 0, display.width(), (FONT_HEIGHT * LCD_FONT_SIZE), MENU_HEADER_BG);
     display.setTextColor(MENU_HEADER_FG, MENU_HEADER_BG);
-    center_for_text(0, strlen(title), LCD_FONT_SIZE);
+    center_for_text(1, strlen(title), LCD_FONT_SIZE);
     display.print(title);
     display.drawLine(0, FONT_HEIGHT * LCD_FONT_SIZE, display.width(), FONT_HEIGHT * LCD_FONT_SIZE, ST7735_BLACK);
 #undef LCD_FONT_SIZE
@@ -196,7 +197,7 @@ void lcd_print_title(const char *title) {
  */
 void lcd_print_item(byte line, const char *item, const char *value, item_state state) {
 #define LCD_FONT_SIZE 2
-    byte y = ((FONT_HEIGHT * LCD_FONT_SIZE + 2) * line);
+    int y = ((FONT_HEIGHT * LCD_FONT_SIZE + 2) * line);
     int c;
     int bg;
     if(state == ITEM_SELECTED) {
@@ -213,6 +214,7 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
       display.setCursor(0, (FONT_HEIGHT * LCD_FONT_SIZE + 2) + FONT_HEIGHT / 2 + y);
       display.print(item);
     }
+
     if(value != NULL) {
       if(state == ITEM_EDITION || state == ITEM_SELECTED) {
          c = ST7735_WHITE;
@@ -223,10 +225,14 @@ void lcd_print_item(byte line, const char *item, const char *value, item_state s
       }
       display.setTextSize(LCD_FONT_SIZE);
       display.setTextColor(c, bg);
-      right_for_text((FONT_HEIGHT *LCD_FONT_SIZE + 2) + y, strlen(value), LCD_FONT_SIZE);
+      right_for_text((FONT_HEIGHT * LCD_FONT_SIZE + 2) + y, strlen(value), LCD_FONT_SIZE);
       display.print(value);
     }
 #undef LCD_FONT_SIZE
+}
+
+byte lcd_item_count() {
+  return 6;
 }
 
 /*

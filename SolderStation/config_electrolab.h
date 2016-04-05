@@ -64,6 +64,11 @@
 #define DELAY_UI_LOOP 5
 
 #define HEAT_PROTECTION
+// 33%
+#define HEAT_PROTECTION_VALUE ((int)((33*256)/100))
+// 15 seconds
+#define HEAT_PROTECTION_TIME 15
+#define HEAT_PROTECTION_DROP 40
 #define MEMORY_SETTINGS
 
 // Behaviours
