@@ -21,6 +21,7 @@ static boolean standby_mode = false;
 struct _memory_settings {
   int target_temperature;
   int standby_temperature;
+  float iron_gain;
 #ifdef LCD_MODULE
   lcd_mode lcd_backlight_mode;
 #ifdef LCD_MODULE_CONTRAST
@@ -40,6 +41,7 @@ struct _memory_settings {
 } settings = {
   300,
   DEFAULT_STANDBY_TEMPERATURE,
+  0.39f,
 #ifdef LCD_MODULE
   LCD_ON,
 #ifdef LCD_MODULE_CONTRAST
@@ -212,6 +214,7 @@ void load_settings() {
     // Security about corrupted eeprom
     set_target_temperature(get_target_temperature());
     set_standby_temperature(get_standby_temperature());
+    iron_set_gain(settings.iron_gain);
   } else {
     DEBUG_LOG_LN(DEBUG_STR("Memory is incorrect. Using default values"));
   }
@@ -221,6 +224,8 @@ void load_settings() {
   DEBUG_LOG_LN(settings.target_temperature);
   DEBUG_LOG(DEBUG_STR("Standby temperature: "));
   DEBUG_LOG_LN(settings.standby_temperature);
+  DEBUG_LOG(DEBUG_STR("Iron gain: "));
+  DEBUG_LOG_LN(settings.iron_gain);
 #ifdef LCD_MODULE
   DEBUG_LOG(DEBUG_STR("LCD backlight: "));
   DEBUG_LOG_LN(settings.lcd_backlight_mode);
@@ -246,6 +251,8 @@ void load_settings() {
  */
 void save_settings() {
   DEBUG_LOG_LN(DEBUG_STR("Save settings"));
+  settings.iron_gain = iron_get_gain();
+  
 #ifdef MEMORY_SETTINGS
   memory_save_settings(EEPROM_OFFSET, &settings, sizeof(settings));
 #endif //MEMORY_SETTINGS

@@ -40,7 +40,7 @@
 #define CONFIG_XXX 3
 
 // Set the board name. Please change the name of the configuration following your board
-//#define CONFIG_NAME CONFIG_XXX
+#define CONFIG_NAME CONFIG_XXX
 
 // Use correct configuration
 #if CONFIG_NAME==CONFIG_XXX

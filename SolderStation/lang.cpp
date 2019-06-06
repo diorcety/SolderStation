@@ -22,6 +22,7 @@ static const char EN_MENU_LCD_BACKLIGHT[] PROGMEM = "Backlight";
 static const char EN_MENU_IRON_TITLE[] PROGMEM = "Iron";
 static const char EN_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "Target T" DEGREE_SYM;
 static const char EN_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "Standby T" DEGREE_SYM;
+static const char EN_MENU_IRON_GAIN[] PROGMEM = "Gain";
 #ifdef HEAT_PROTECTION
 static const char EN_MENU_IRON_PROTECTION_PWM[] PROGMEM = "Prot. limit";
 static const char EN_MENU_IRON_PROTECTION_TIME[] PROGMEM = "Prot. time";
@@ -49,6 +50,7 @@ static const char * const en_translation[] PROGMEM = {
   EN_MENU_IRON_TITLE,
   EN_MENU_IRON_TARGET_TEMPERATURE,
   EN_MENU_IRON_STANDBY_TEMPERATURE,
+  EN_MENU_IRON_GAIN,
 #ifdef HEAT_PROTECTION
   EN_MENU_IRON_PROTECTION_PWM,
   EN_MENU_IRON_PROTECTION_TIME,
@@ -77,6 +79,7 @@ static const char FR_MENU_LCD_BACKLIGHT[] PROGMEM = "Eclairage";
 static const char FR_MENU_IRON_TITLE[] PROGMEM = "Fer";
 static const char FR_MENU_IRON_TARGET_TEMPERATURE[] PROGMEM = "T" DEGREE_SYM " consig.";
 static const char FR_MENU_IRON_STANDBY_TEMPERATURE[] PROGMEM = "T" DEGREE_SYM " repos";
+static const char FR_MENU_IRON_GAIN[] PROGMEM = "Gain";
 #ifdef HEAT_PROTECTION
 static const char FR_MENU_IRON_PROTECTION_PWM[] PROGMEM = "Prot. lim.";
 static const char FR_MENU_IRON_PROTECTION_TIME[] PROGMEM = "Prot. temps";
@@ -104,6 +107,7 @@ static const char * const fr_translation[] PROGMEM = {
   FR_MENU_IRON_TITLE,
   FR_MENU_IRON_TARGET_TEMPERATURE,
   FR_MENU_IRON_STANDBY_TEMPERATURE,
+  FR_MENU_IRON_GAIN,
 #ifdef HEAT_PROTECTION
   FR_MENU_IRON_PROTECTION_PWM,
   FR_MENU_IRON_PROTECTION_TIME,

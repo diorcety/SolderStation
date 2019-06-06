@@ -11,11 +11,13 @@
 #error Missing configuration of PIN_PROBE_IN
 #endif //PIN_PROBE_IN
 
-//R2=68K:
-#define ADC_TO_TEMP_GAIN 0.39
-#define ADC_TO_TEMP_OFFSET 23.9
+
+#define ADC_TO_TEMP_OFFSET 24.0f
 
 #define PWM_DIV 1024 //default: 64
+
+//R2=68K:
+static float iron_gain = 0.39f;
 
 /*
  * Init iron stuff
@@ -38,7 +40,7 @@ void iron_init() {
  */
 int iron_get_temperature() {
   int adcValue = analogRead(PIN_PROBE_IN); // read the input on analog pin 0:
-  return round(((float) adcValue)*ADC_TO_TEMP_GAIN+ADC_TO_TEMP_OFFSET); //apply linear conversion to actual temperature
+  return round(((float) adcValue)*iron_gain+ADC_TO_TEMP_OFFSET); //apply linear conversion to actual temperature
 }
 
 /*
@@ -46,6 +48,20 @@ int iron_get_temperature() {
  */
 int iron_get_max_temperature() {
   return MAX_IRON_TEMP_IN_DEGREES;
+}
+
+/*
+ * Reads the gain
+ */
+float iron_get_gain() {
+  return iron_gain;
+}
+
+/*
+ * Set the gain
+ */
+void iron_set_gain(float gain) {
+    iron_gain = gain;
 }
 
 /*

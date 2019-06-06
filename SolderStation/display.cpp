@@ -7,6 +7,7 @@
 #include "seg7.h"
 #include "utils.h"
 #include "lang.h"
+#include "iron.h"
 
 #ifndef TEMP_STEP
 #error Missing configuration of TEMP_STEP
@@ -524,6 +525,7 @@ private:
   typedef enum {
     TARGET_TEMPERATURE = 0,
     STANDBY_TEMPERATURE,
+    IRON_GAIN,
 #ifdef HEAT_PROTECTION
     PROTECTION_PWM,
     PROTECTION_TIME,
@@ -553,6 +555,14 @@ private:
     return true;
   }
   
+  static const char* get_gain() {
+    return my_sprintf("%d", (byte)(::iron_get_gain() * 100.0f));
+  }
+
+  static boolean set_gain(int inc) {
+    ::iron_set_gain(::iron_get_gain() + (float)(1 * inc)/100.0f);
+    return true;
+  }
 #ifdef HEAT_PROTECTION
   static const char* get_protection_pwm() {
     return my_sprintf("%d", (byte)((float)::get_protection_pwm() / 255.0f * 100.0f));
@@ -594,6 +604,7 @@ public:
 item_entry IronMenuScreen::menu_items[IronMenuScreen::MAX] = {
   {TT(MENU_IRON_TARGET_TEMPERATURE), get_target_temperature, set_target_temperature},
   {TT(MENU_IRON_STANDBY_TEMPERATURE), get_standby_temperature, set_standby_temperature},
+  {TT(MENU_IRON_GAIN), get_gain, set_gain},
 #ifdef HEAT_PROTECTION
   {TT(MENU_IRON_PROTECTION_PWM), get_protection_pwm, set_protection_pwm},
   {TT(MENU_IRON_PROTECTION_TIME), get_protection_time, set_protection_time},
